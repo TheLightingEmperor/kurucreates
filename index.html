@@ -1017,6 +1017,10 @@
       <div class="yt-carousel">
         <div class="yt-viewport">
           <div class="yt-track" id="ytTrack">
+            <a class="yt-slide" href="https://vimeo.com/1194046316" target="_blank" rel="noopener" data-vimeo-slide="1194046316">
+              <img id="vimeoSlideThumb1194046316" src="" alt="Vimeo Reel" loading="lazy" />
+              <div class="yt-slide-ov"><div class="yt-pb"><svg viewBox="0 0 24 24"><polygon points="5,3 19,12 5,21"/></svg></div><div class="yt-slide-label">Watch on Vimeo</div></div>
+            </a>
             <a class="yt-slide" href="https://youtu.be/806o6JuYfV8" target="_blank" rel="noopener">
               <img src="https://img.youtube.com/vi/806o6JuYfV8/maxresdefault.jpg" alt="Work Reel 1" loading="lazy" />
               <div class="yt-slide-ov"><div class="yt-pb"><svg viewBox="0 0 24 24"><polygon points="5,3 19,12 5,21"/></svg></div><div class="yt-slide-label">Watch on YouTube</div></div>
@@ -1042,6 +1046,7 @@
             <button class="yt-dot" onclick="ytGo(1)"></button>
             <button class="yt-dot" onclick="ytGo(2)"></button>
             <button class="yt-dot" onclick="ytGo(3)"></button>
+            <button class="yt-dot" onclick="ytGo(4)"></button>
           </div>
           <div class="yt-arrows">
             <button class="yt-arr" onclick="ytPrev()">&#8592;</button>
@@ -1824,7 +1829,7 @@ function toggleFaq(q) {
 //  YOUTUBE CAROUSEL
 // ═══════════════════════════════════════════════════
 let ytCurrent = 0;
-const ytTotal = 4;
+const ytTotal = 5;
 function ytGo(index) {
   ytCurrent = (index + ytTotal) % ytTotal;
   document.getElementById('ytTrack').style.transform = `translateX(-${ytCurrent * 100}%)`;
@@ -1834,6 +1839,17 @@ function ytGo(index) {
 function ytNext() { ytGo(ytCurrent + 1); }
 function ytPrev() { ytGo(ytCurrent - 1); }
 setInterval(() => ytNext(), 5000);
+
+// Load thumbnail for Vimeo slide in Services carousel
+document.querySelectorAll('.yt-slide[data-vimeo-slide]').forEach(slide => {
+  const id = slide.dataset.vimeoSlide;
+  const img = document.getElementById('vimeoSlideThumb' + id);
+  if (!img) return;
+  fetch(`https://vimeo.com/api/oembed.json?url=https://vimeo.com/${id}&width=800`)
+    .then(r => r.json())
+    .then(data => { if (data.thumbnail_url) img.src = data.thumbnail_url.replace(/_\d+x\d+/, '_1280'); })
+    .catch(() => {});
+});
 
 // ═══════════════════════════════════════════════════
 //  VIMEO THUMBNAILS
