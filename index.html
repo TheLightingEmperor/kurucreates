@@ -423,6 +423,36 @@
     .vcard-c { position: absolute; width: 12px; height: 12px; border-color: rgba(200,255,71,.55); border-style: solid; }
     .vcard-c.tl { top: 8px; left: 8px; border-width: 1px 0 0 1px; }
     .vcard-c.tr { top: 8px; right: 8px; border-width: 1px 1px 0 0; }
+    .vcard-c.bl { bottom: 8px; left: 8px; border-width: 0 0 1px 1px; }
+    .vcard-c.br { bottom: 8px; right: 8px; border-width: 0 1px 1px 0; }
+
+    /* ── FEATURED BRAND ADS ───────────────────────── */
+    #brand-ad { padding-bottom: 80px; }
+    .brandad-wrap { display: flex; justify-content: center; margin-top: 8px; }
+    .brandad-card {
+      position: relative;
+      width: 100%; max-width: 860px;
+      aspect-ratio: 16/9;
+      overflow: hidden;
+      cursor: none;
+      border: 1px solid var(--border);
+      background: var(--black-3);
+      transition: border-color .35s, transform .35s;
+    }
+    .brandad-card:hover { border-color: rgba(200,255,71,.45); transform: translateY(-6px); }
+    .brandad-img {
+      position: absolute; inset: 0; width: 100%; height: 100%;
+      object-fit: cover; display: block;
+      transition: transform .6s cubic-bezier(.25,.46,.45,.94);
+    }
+    .brandad-card:hover .brandad-img { transform: scale(1.04); }
+    .brandad-play { width: 68px; height: 68px; }
+    .brandad-play svg { width: 20px; height: 20px; }
+    .brandad-label {
+      position: absolute; bottom: 16px; left: 20px;
+      font-family: var(--mono); font-size: 9px; letter-spacing: .18em;
+      color: rgba(255,255,255,.55); text-transform: uppercase;
+    }
 
     /* ── SERVICES ─────────────────────────────────── */
     #services { background: var(--black-2); }
@@ -577,7 +607,9 @@
     }
     .vmodal.open { opacity: 1; pointer-events: all; }
     .vmodal-box { position: relative; width: min(400px, 86vw); }
+    .vmodal-box.wide { width: min(900px, 90vw); }
     .vmodal-frame { aspect-ratio: 9/16; width: 100%; position: relative; border: 1px solid var(--border); background: var(--black-3); }
+    .vmodal-frame.wide { aspect-ratio: 16/9; }
     .vmodal-frame iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: none; }
     .vmodal-close {
       position: absolute; top: -46px; right: 0; width: 36px; height: 36px;
@@ -992,6 +1024,27 @@
   </div>
 </section>
 
+<!-- ═══ FEATURED BRAND ADS ══════════════════════════ -->
+<section id="brand-ad">
+  <div class="work-header">
+    <div>
+      <div class="sec-label rev"><div class="sec-label-line"></div><span class="sec-label-text">Spotlight</span></div>
+      <h2 class="sec-h2 rev d1">FEATURED<br><span>BRAND ADS</span></h2>
+    </div>
+  </div>
+
+  <div class="brandad-wrap">
+    <div class="brandad-card" onclick="openYtModal('vCfQQ-N21lU')">
+      <img class="brandad-img" src="https://img.youtube.com/vi/vCfQQ-N21lU/maxresdefault.jpg" onerror="this.onerror=null;this.src='https://img.youtube.com/vi/vCfQQ-N21lU/hqdefault.jpg'" alt="Featured brand ad thumbnail" loading="lazy" />
+      <div class="vcard-mask"></div>
+      <div class="vcard-play brandad-play"><svg viewBox="0 0 24 24"><polygon points="6,3 20,12 6,21"/></svg></div>
+      <div class="vcard-c tl"></div><div class="vcard-c tr"></div>
+      <div class="vcard-c bl"></div><div class="vcard-c br"></div>
+      <div class="brandad-label">Brand Campaign</div>
+    </div>
+  </div>
+</section>
+
 <!-- ═══ SERVICES ════════════════════════════════════ -->
 <section id="services">
   <div class="sec-label rev"><div class="sec-label-line"></div><span class="sec-label-text">What I Do</span></div>
@@ -1271,6 +1324,17 @@
     <button class="vmodal-close" onclick="closeModal()">&times;</button>
     <div class="vmodal-frame">
       <iframe id="vmodal-iframe" src="" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen></iframe>
+    </div>
+    <div class="vmodal-esc">ESC to close</div>
+  </div>
+</div>
+
+<!-- Brand Ad Modal -->
+<div class="vmodal" id="ytmodal" onclick="closeYtModal(event)">
+  <div class="vmodal-box wide">
+    <button class="vmodal-close" onclick="closeYtModal()">&times;</button>
+    <div class="vmodal-frame wide">
+      <iframe id="ytmodal-iframe" src="" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen></iframe>
     </div>
     <div class="vmodal-esc">ESC to close</div>
   </div>
@@ -1920,6 +1984,34 @@ document.addEventListener('keydown', e => {
   if (e.key === 'Escape') {
     vmodalIframe.src = '';
     vmodal.classList.remove('open');
+    document.body.style.overflow = '';
+    lenis.start();
+  }
+});
+
+// ═══════════════════════════════════════════════════
+//  FEATURED BRAND AD MODAL (YouTube)
+// ═══════════════════════════════════════════════════
+const ytmodal = document.getElementById('ytmodal');
+const ytmodalIframe = document.getElementById('ytmodal-iframe');
+
+function openYtModal(id) {
+  ytmodalIframe.src = `https://www.youtube-nocookie.com/embed/${id}?autoplay=1&rel=0&modestbranding=1&iv_load_policy=3&playsinline=1`;
+  ytmodal.classList.add('open');
+  document.body.style.overflow = 'hidden';
+  lenis.stop();
+}
+function closeYtModal(e) {
+  if (e && e.target !== ytmodal) return;
+  ytmodalIframe.src = '';
+  ytmodal.classList.remove('open');
+  document.body.style.overflow = '';
+  lenis.start();
+}
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') {
+    ytmodalIframe.src = '';
+    ytmodal.classList.remove('open');
     document.body.style.overflow = '';
     lenis.start();
   }
