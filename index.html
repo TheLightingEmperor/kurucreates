@@ -428,10 +428,10 @@
 
     /* ── FEATURED BRAND ADS ───────────────────────── */
     #brand-ad { padding-bottom: 80px; }
-    .brandad-wrap { display: flex; justify-content: center; margin-top: 8px; }
+    .brandad-wrap { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; margin-top: 8px; }
     .brandad-card {
       position: relative;
-      width: 100%; max-width: 860px;
+      width: 100%;
       aspect-ratio: 16/9;
       overflow: hidden;
       cursor: none;
@@ -705,6 +705,7 @@
       .work-h-outer::-webkit-scrollbar { display: none; }
       .work-h-track { padding: 0 28px 0 0; }
       .vcard { width: 160px; }
+      .brandad-wrap { grid-template-columns: 1fr; }
     }
     @media (max-width: 600px) {
       .proc-grid { grid-template-columns: 1fr; }
@@ -1036,6 +1037,22 @@
   <div class="brandad-wrap">
     <div class="brandad-card" onclick="openYtModal('vCfQQ-N21lU')">
       <img class="brandad-img" src="https://img.youtube.com/vi/vCfQQ-N21lU/maxresdefault.jpg" onerror="this.onerror=null;this.src='https://img.youtube.com/vi/vCfQQ-N21lU/hqdefault.jpg'" alt="Featured brand ad thumbnail" loading="lazy" />
+      <div class="vcard-mask"></div>
+      <div class="vcard-play brandad-play"><svg viewBox="0 0 24 24"><polygon points="6,3 20,12 6,21"/></svg></div>
+      <div class="vcard-c tl"></div><div class="vcard-c tr"></div>
+      <div class="vcard-c bl"></div><div class="vcard-c br"></div>
+      <div class="brandad-label">Brand Campaign</div>
+    </div>
+    <div class="brandad-card" onclick="openYtModal('7Nm3rsyg7B0')">
+      <img class="brandad-img" src="https://img.youtube.com/vi/7Nm3rsyg7B0/maxresdefault.jpg" onerror="this.onerror=null;this.src='https://img.youtube.com/vi/7Nm3rsyg7B0/hqdefault.jpg'" alt="Featured brand ad thumbnail" loading="lazy" />
+      <div class="vcard-mask"></div>
+      <div class="vcard-play brandad-play"><svg viewBox="0 0 24 24"><polygon points="6,3 20,12 6,21"/></svg></div>
+      <div class="vcard-c tl"></div><div class="vcard-c tr"></div>
+      <div class="vcard-c bl"></div><div class="vcard-c br"></div>
+      <div class="brandad-label">Brand Campaign</div>
+    </div>
+    <div class="brandad-card" onclick="openYtModal('J53gwYYq__Q')">
+      <img class="brandad-img" src="https://img.youtube.com/vi/J53gwYYq__Q/maxresdefault.jpg" onerror="this.onerror=null;this.src='https://img.youtube.com/vi/J53gwYYq__Q/hqdefault.jpg'" alt="Featured brand ad thumbnail" loading="lazy" />
       <div class="vcard-mask"></div>
       <div class="vcard-play brandad-play"><svg viewBox="0 0 24 24"><polygon points="6,3 20,12 6,21"/></svg></div>
       <div class="vcard-c tl"></div><div class="vcard-c tr"></div>
