@@ -713,9 +713,104 @@
       .stats-bar { grid-template-columns: repeat(2,1fr); }
       .scroll-top { bottom: 24px; right: 24px; }
     }
+
+    /* ═══ INTRO VIDEO OVERLAY ═══════════════════════ */
+    #introOverlay {
+      position: fixed; inset: 0; z-index: 20000;
+      background: var(--black);
+      display: flex; align-items: center; justify-content: center;
+      opacity: 1;
+      transition: opacity 1.1s cubic-bezier(.4,0,.2,1), visibility 0s linear 1.1s;
+    }
+    #introOverlay video {
+      width: 100%; height: 100%; object-fit: cover;
+      opacity: 0; transition: opacity .5s ease;
+    }
+    #introOverlay video.playing { opacity: 1; }
+    #introOverlay.intro-done { opacity: 0; visibility: hidden; pointer-events: none; }
+    #introOverlay.intro-fast { transition: opacity .45s ease, visibility 0s linear .45s; }
+    .intro-btns {
+      position: absolute; bottom: 28px; right: 28px;
+      display: flex; gap: 10px; z-index: 2;
+    }
+    .intro-btn {
+      font-family: var(--mono); font-size: 11px; letter-spacing: .12em; text-transform: uppercase;
+      color: rgba(255,255,255,.75); background: rgba(0,0,0,.35);
+      border: 1px solid rgba(255,255,255,.25); border-radius: 100px;
+      padding: 9px 18px; cursor: pointer; backdrop-filter: blur(6px);
+      transition: color .25s, border-color .25s;
+    }
+    .intro-btn:hover { color: #fff; border-color: rgba(255,255,255,.6); }
+    html.intro-lock, html.intro-lock body { overflow: hidden; height: 100%; }
   </style>
 </head>
 <body>
+
+<!-- ═══ INTRO VIDEO ════════════════════════════════ -->
+<div id="introOverlay" aria-hidden="true">
+  <video id="introVideo" src="public/website-intro.mp4" playsinline preload="auto"></video>
+  <div class="intro-btns">
+    <button class="intro-btn" id="introSound" style="display:none">&#128266; Sound On</button>
+    <button class="intro-btn" id="introSkip">Skip Intro</button>
+  </div>
+</div>
+<script>
+(function() {
+  const overlay = document.getElementById('introOverlay');
+  const video   = document.getElementById('introVideo');
+  const skipBtn = document.getElementById('introSkip');
+  const sndBtn  = document.getElementById('introSound');
+
+  window.__introActive = true;
+  document.documentElement.classList.add('intro-lock');
+
+  let finished = false;
+  function finish(fast, reason) {
+    if (finished) return;
+    finished = true;
+    console.log('[intro] finished — reason:', reason || 'n/a', '| t=', video.currentTime.toFixed(2) + 's');
+    if (fast) overlay.classList.add('intro-fast');
+    overlay.classList.add('intro-done');
+    document.documentElement.classList.remove('intro-lock');
+    window.__introActive = false;
+    // Kick off the hero entrance the moment the dissolve begins,
+    // so the site animates in behind the fading video.
+    if (typeof window.__startHero === 'function') window.__startHero();
+    else window.__introDone = true;
+    try { video.pause(); } catch (e) {}
+    overlay.addEventListener('transitionend', () => overlay.remove(), { once: true });
+    setTimeout(() => { if (overlay.parentNode) overlay.remove(); }, 1800);
+  }
+
+  // Respect reduced motion — go straight to the site
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) { finish(true, 'reduced-motion'); return; }
+
+  skipBtn.addEventListener('click', () => finish(false, 'skip'));
+  video.addEventListener('ended', () => finish(false, 'ended'));
+  video.addEventListener('error', () => finish(true, 'video-error'));
+  video.addEventListener('playing', () => video.classList.add('playing'), { once: true });
+  if (location.search.includes('introhold')) { video.addEventListener('playing', () => setTimeout(() => video.pause(), 1500), { once: true }); }
+
+  // Try autoplay with sound; if the browser blocks it, fall back to muted
+  // and offer a tap-to-unmute button.
+  video.play().catch(() => {
+    video.muted = true;
+    video.play().then(() => {
+      sndBtn.style.display = '';
+      sndBtn.addEventListener('click', () => {
+        video.muted = false;
+        video.currentTime = 0;
+        sndBtn.style.display = 'none';
+      });
+    }).catch(() => finish(true, 'autoplay-blocked'));
+  });
+
+  // Watchdogs: if playback hasn't started in 4s (slow network), or the
+  // intro somehow never ends, dissolve into the site anyway.
+  setTimeout(() => { if (!video.classList.contains('playing')) finish(true, 'playback-timeout'); }, 4000);
+  setTimeout(() => finish(false, 'hard-cap'), 12000);
+})();
+</script>
 
 <!-- Cursor -->
 <div class="c-dot" id="cDot"></div>
@@ -1709,16 +1804,25 @@ function closeMobileMenu() {
     setTimeout(() => requestAnimationFrame(tick), delay);
   }
 
-  document.querySelectorAll('.sc').forEach((el, i) => scramble(el, 120 + i * 200));
+  // Hero entrance — fired by the intro video overlay as it dissolves,
+  // or immediately if the intro is skipped/absent.
+  let heroStarted = false;
+  window.__startHero = function() {
+    if (heroStarted) return;
+    heroStarted = true;
 
-  // Fade-in the rest of the hero on load
-  const tl = gsap.timeline({ delay: 0.1 });
-  tl.to('#heroEyebrow', { opacity: 1, y: 0, duration: 0.7, ease: 'power3.out' })
-    .to('#heroH1',      { opacity: 1, duration: 0.01 }, '<')
-    .to('#heroSub',     { opacity: 1, y: 0, duration: 0.7, ease: 'power3.out' }, '+=0.3')
-    .to('#heroActions', { opacity: 1, y: 0, duration: 0.6, ease: 'power3.out' }, '-=0.4')
-    .to('#heroProof',   { opacity: 1, y: 0, duration: 0.6, ease: 'power3.out' }, '-=0.4')
-    .to('#heroRight',   { opacity: 1, x: 0, duration: 1.0, ease: 'power3.out' }, '-=0.7');
+    document.querySelectorAll('.sc').forEach((el, i) => scramble(el, 120 + i * 200));
+
+    const tl = gsap.timeline({ delay: 0.1 });
+    tl.to('#heroEyebrow', { opacity: 1, y: 0, duration: 0.7, ease: 'power3.out' })
+      .to('#heroH1',      { opacity: 1, duration: 0.01 }, '<')
+      .to('#heroSub',     { opacity: 1, y: 0, duration: 0.7, ease: 'power3.out' }, '+=0.3')
+      .to('#heroActions', { opacity: 1, y: 0, duration: 0.6, ease: 'power3.out' }, '-=0.4')
+      .to('#heroProof',   { opacity: 1, y: 0, duration: 0.6, ease: 'power3.out' }, '-=0.4')
+      .to('#heroRight',   { opacity: 1, x: 0, duration: 1.0, ease: 'power3.out' }, '-=0.7');
+  };
+
+  if (!window.__introActive || window.__introDone) window.__startHero();
 })();
 
 // ═══════════════════════════════════════════════════
