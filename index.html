@@ -4,6 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Karan Kothari — Cinematic Content Production</title>
+  <link rel="preload" href="public/website-intro.mp4" as="video" type="video/mp4" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Archivo:ital,wght@0,300;0,400;0,500;0,600;0,700;0,900;1,300;1,700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
@@ -805,10 +806,17 @@
     }).catch(() => finish(true, 'autoplay-blocked'));
   });
 
-  // Watchdogs: if playback hasn't started in 4s (slow network), or the
-  // intro somehow never ends, dissolve into the site anyway.
-  setTimeout(() => { if (!video.classList.contains('playing')) finish(true, 'playback-timeout'); }, 4000);
-  setTimeout(() => finish(false, 'hard-cap'), 12000);
+  // Watchdog: if playback hasn't started, bail only when nothing is
+  // downloading; grant one extension while the video is still buffering.
+  let extended = false;
+  function watchdog() {
+    if (finished || video.classList.contains('playing')) return;
+    if (!extended && video.readyState >= 1) { extended = true; setTimeout(watchdog, 4000); return; }
+    finish(true, 'playback-timeout');
+  }
+  setTimeout(watchdog, 4000);
+  // Absolute cap so the intro can never trap the visitor.
+  setTimeout(() => finish(false, 'hard-cap'), 14000);
 })();
 </script>
 
