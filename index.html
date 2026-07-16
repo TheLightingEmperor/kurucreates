@@ -806,10 +806,17 @@
   video.addEventListener('playing', () => video.classList.add('playing'), { once: true });
   if (location.search.includes('introhold')) { video.addEventListener('playing', () => setTimeout(() => video.pause(), 1500), { once: true }); }
 
-  // Try autoplay with sound; if the browser blocks it, fall back to muted.
+  // Try autoplay with sound; if the browser blocks it, fall back to muted
+  // and unmute on the visitor's first gesture (click / tap / key / scroll).
   video.play().catch(() => {
     video.muted = true;
     video.play().catch(() => finish(true, 'autoplay-blocked'));
+    const unmute = () => {
+      video.muted = false;
+      GESTURES.forEach(t => window.removeEventListener(t, unmute, true));
+    };
+    const GESTURES = ['pointerdown', 'keydown', 'touchstart', 'wheel'];
+    GESTURES.forEach(t => window.addEventListener(t, unmute, true));
   });
 
   // Watchdog: if playback hasn't started, bail only when nothing is
