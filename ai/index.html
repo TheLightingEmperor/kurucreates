@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>AI Agents &amp; Development — Karan Kothari</title>
+<meta name="description" content="Agents, automations, and platforms built with AI harnesses — Kamana, LeadLens, Star Sight, and more." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Archivo:ital,wght@0,300;0,400;0,500;0,600;0,700;0,900;1,300&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<style>
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+  :root {
+    --black: #080808; --black-2: #0f0f0f; --black-3: #141414;
+    --lime: #C8FF47; --lime-dk: #9DC832; --red: #E8003D;
+    --white: #F0EDE6; --white-60: rgba(240,237,230,0.60); --white-40: rgba(240,237,230,0.40);
+    --white-20: rgba(240,237,230,0.20); --border: rgba(240,237,230,0.10);
+    --disp: 'Bebas Neue', sans-serif; --body: 'Archivo', sans-serif; --mono: 'JetBrains Mono', monospace;
+  }
+  html { background: var(--black); scroll-behavior: smooth; overflow-x: hidden; }
+  body { background: var(--black); color: var(--white); font-family: var(--body); }
+  body::before {
+    content: ''; position: fixed; inset: 0; z-index: 1; pointer-events: none;
+    opacity: .025; mix-blend-mode: overlay;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)'/%3E%3C/svg%3E");
+    background-size: 200px 200px;
+  }
+
+  /* ── HEADER ─────────────────────────────────── */
+  header {
+    position: sticky; top: 0; z-index: 50;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 22px 40px; border-bottom: 1px solid var(--border);
+    background: rgba(8,8,8,.88); backdrop-filter: blur(16px);
+  }
+  .nav-brand-group { display: flex; align-items: center; gap: 16px; }
+  .nav-back {
+    display: flex; align-items: center; justify-content: center;
+    width: 28px; height: 28px; border-radius: 50%;
+    color: var(--white-60); border: 1px solid var(--border);
+    text-decoration: none; transition: color .2s, border-color .2s;
+  }
+  .nav-back:hover { color: var(--lime); border-color: var(--lime); }
+  .logo { font-family: var(--disp); font-size: 20px; letter-spacing: .14em; color: var(--white); text-decoration: none; }
+  .logo span { color: var(--lime); }
+  .hdr-cta {
+    font-family: var(--mono); font-size: 10px; letter-spacing: .16em; text-transform: uppercase;
+    color: var(--white-60); text-decoration: none; transition: color .2s;
+  }
+  .hdr-cta:hover { color: var(--lime); }
+
+  /* ── PAGE HERO ──────────────────────────────── */
+  .page-hero { position: relative; z-index: 5; padding: 90px 40px 60px; max-width: 900px; }
+  .eyebrow {
+    font-family: var(--mono); font-size: 11px; letter-spacing: .24em; text-transform: uppercase;
+    color: var(--lime); margin-bottom: 20px; display: flex; align-items: center; gap: 10px;
+  }
+  .eyebrow::before { content: ''; width: 34px; height: 1px; background: var(--border); }
+  .page-hero h1 {
+    font-family: var(--disp); font-weight: 400;
+    font-size: clamp(38px, 6vw, 74px); letter-spacing: .01em; line-height: .98; margin-bottom: 22px;
+  }
+  .page-hero h1 span { color: var(--lime); }
+  .page-hero p { font-size: 15px; line-height: 1.75; color: var(--white-60); max-width: 620px; }
+
+  /* ── GRID ───────────────────────────────────── */
+  .grid-wrap { position: relative; z-index: 5; padding: 0 40px 100px; }
+  .grid {
+    display: grid; grid-template-columns: repeat(2, 1fr); gap: 26px;
+    max-width: 1280px; margin: 0 auto;
+  }
+  @media (max-width: 900px) { .grid { grid-template-columns: 1fr; } .page-hero, .grid-wrap { padding-left: 22px; padding-right: 22px; } header { padding: 20px 22px; } }
+
+  .card {
+    background: var(--black-2); border: 1px solid var(--border);
+    display: flex; flex-direction: column;
+    transition: border-color .3s ease, transform .3s ease;
+  }
+  .card:hover { border-color: rgba(200,255,71,.35); transform: translateY(-3px); }
+
+  /* device frame */
+  .frame-bar {
+    display: flex; align-items: center; gap: 14px;
+    padding: 11px 14px; border-bottom: 1px solid var(--border);
+  }
+  .frame-dots { display: flex; gap: 6px; }
+  .frame-dots span { width: 7px; height: 7px; border-radius: 50%; background: var(--white-20); }
+  .frame-url {
+    flex: 1; font-family: var(--mono); font-size: 10px; color: var(--white-40);
+    background: var(--black); border: 1px solid var(--border); border-radius: 3px;
+    padding: 4px 10px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+  }
+  .demo {
+    position: relative; height: 190px; overflow: hidden;
+    background: radial-gradient(circle at 30% 20%, rgba(200,255,71,.07), transparent 60%), var(--black);
+  }
+  .demo svg { position: absolute; inset: 0; width: 100%; height: 100%; }
+
+  .card-body { padding: 26px 26px 28px; display: flex; flex-direction: column; flex: 1; }
+  .card-idx { font-family: var(--mono); font-size: 10px; letter-spacing: .18em; color: var(--white-40); margin-bottom: 10px; }
+  .card-title { font-family: var(--disp); font-size: 27px; letter-spacing: .01em; margin-bottom: 10px; line-height: 1; }
+  .card-tag {
+    display: inline-flex; align-items: center; gap: 6px;
+    font-family: var(--mono); font-size: 9px; letter-spacing: .14em; text-transform: uppercase;
+    color: var(--lime-dk); border: 1px solid rgba(157,200,50,.35); border-radius: 20px;
+    padding: 4px 10px; margin-bottom: 14px; width: fit-content;
+  }
+  .card-tag.internal { color: var(--white-40); border-color: var(--border); }
+  .card-tag .dot { width: 5px; height: 5px; border-radius: 50%; background: currentColor; }
+  .card-desc { font-size: 13.5px; line-height: 1.65; color: var(--white-60); margin-bottom: 22px; flex: 1; }
+  .card-actions { display: flex; align-items: center; gap: 14px; margin-top: auto; }
+  .btn-launch {
+    display: inline-flex; align-items: center; gap: 8px;
+    font-family: var(--mono); font-size: 11px; letter-spacing: .14em; text-transform: uppercase;
+    color: var(--black); background: var(--lime); text-decoration: none;
+    padding: 11px 18px; transition: background .2s, transform .2s;
+  }
+  .btn-launch:hover { background: var(--white); transform: translateX(2px); }
+  .btn-launch svg { width: 12px; height: 12px; }
+  .note-lock {
+    font-family: var(--mono); font-size: 10.5px; color: var(--white-40);
+    display: flex; align-items: center; gap: 6px;
+  }
+  .note-lock svg { width: 12px; height: 12px; flex-shrink: 0; }
+  .btn-soon {
+    font-family: var(--mono); font-size: 10.5px; letter-spacing: .1em; text-transform: uppercase;
+    color: var(--white-40); border: 1px dashed var(--border); padding: 10px 16px;
+  }
+
+  /* ── DEMO VISUALS ───────────────────────────── */
+  /* 1. Kamana — hub & spoke */
+  .k-line { stroke: rgba(200,255,71,.35); stroke-width: 1; }
+  .k-node { fill: var(--black-3); stroke: var(--lime); stroke-width: 1.2; }
+  .k-core { fill: var(--lime); }
+  .k-pulse { fill: none; stroke: var(--lime); stroke-width: 1; opacity: 0; transform-origin: 95px 95px; animation: kpulse 2.6s ease-out infinite; }
+  .k-pulse:nth-child(2) { animation-delay: .9s; }
+  @keyframes kpulse { 0% { opacity: .6; transform: scale(.3);} 100% { opacity: 0; transform: scale(2.2);} }
+
+  /* 2. LeadLens — scan */
+  .l-row { stroke: var(--white-20); stroke-width: 4; stroke-linecap: round; }
+  .l-scan { stroke: var(--lime); stroke-width: 1; opacity: .8; animation: lscan 2.4s ease-in-out infinite; }
+  @keyframes lscan { 0%,100% { transform: translateY(0); } 50% { transform: translateY(150px); } }
+  .l-glass { fill: none; stroke: var(--lime); stroke-width: 2; animation: lfloat 3s ease-in-out infinite; }
+  @keyframes lfloat { 0%,100% { transform: translate(0,0); } 50% { transform: translate(6px,10px); } }
+
+  /* 3. AI Clone — duplicating silhouettes */
+  .c-figure { fill: var(--white-20); animation: cfade 3.2s ease-in-out infinite; }
+  .c-figure.main { fill: var(--lime); animation: none; }
+  .c-figure:nth-child(2) { animation-delay: .3s; } .c-figure:nth-child(3) { animation-delay: .6s; }
+  .c-figure:nth-child(5) { animation-delay: .9s; } .c-figure:nth-child(6) { animation-delay: 1.2s; }
+  @keyframes cfade { 0%,100% { opacity: .18; } 50% { opacity: .55; } }
+
+  /* 4. MidjourneyCodes — swatch grid */
+  .m-sw { animation: mshift 4s ease-in-out infinite; }
+  .m-sw:nth-child(odd) { animation-delay: .5s; }
+  .m-sw:nth-child(3n) { animation-delay: 1s; }
+  @keyframes mshift { 0%,100% { opacity: .55; } 50% { opacity: 1; } }
+
+  /* 5. Birthday — calendar + burst */
+  .b-ring { fill: none; stroke: var(--lime); stroke-width: 1; opacity: 0; animation: bburst 2.4s ease-out infinite; transform-origin: 95px 78px; }
+  @keyframes bburst { 0% { opacity: .8; transform: scale(.2);} 100% { opacity: 0; transform: scale(2.6);} }
+  .b-env { animation: benv 2.4s ease-in-out infinite; }
+  @keyframes benv { 0%,60%,100% { transform: translateY(0); opacity: .9; } 80% { transform: translateY(-14px); opacity: 1; } }
+
+  /* 6. Mass email — merge flow */
+  .e-dot { fill: var(--lime); animation: edot 1.8s ease-in-out infinite; }
+  .e-dot.d2 { animation-delay: .3s; } .e-dot.d3 { animation-delay: .6s; }
+  @keyframes edot { 0%, 100% { opacity: .25; r: 3; } 50% { opacity: 1; r: 4; } }
+
+  /* 7. Star Sight — constellation */
+  .s-star { fill: var(--white); animation: stwinkle 3s ease-in-out infinite; }
+  .s-star.big { fill: var(--lime); animation-duration: 2.2s; }
+  @keyframes stwinkle { 0%,100% { opacity: .3; } 50% { opacity: 1; } }
+  .s-link { stroke: rgba(200,255,71,.25); stroke-width: .8; }
+
+  /* 8. Zoom-Notion — transform arrow */
+  .z-pulse { animation: zpulse 2s ease-in-out infinite; }
+  @keyframes zpulse { 0%,100% { opacity: .5; } 50% { opacity: 1; } }
+  .z-dash { stroke: var(--lime); stroke-width: 1.4; stroke-dasharray: 4 5; animation: zdash 1.4s linear infinite; }
+  @keyframes zdash { to { stroke-dashoffset: -18; } }
+
+  footer {
+    position: relative; z-index: 5; border-top: 1px solid var(--border);
+    padding: 22px 40px; display: flex; align-items: center; justify-content: space-between;
+    font-size: 12px; color: var(--white-40);
+  }
+  @media (max-width: 600px) { footer { flex-direction: column; gap: 10px; text-align: center; padding: 20px 22px; } }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="nav-brand-group">
+    <a href="/" class="nav-back" aria-label="Back to karankothari.com">
+      <svg width="13" height="13" viewBox="0 0 15 15" fill="none"><path d="M12 7.5H3M3 7.5L6.5 4M3 7.5L6.5 11" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </a>
+    <a href="/" class="logo">KARAN<span> KOTHARI</span></a>
+  </div>
+  <a href="https://calendly.com/karan-kathori" target="_blank" class="hdr-cta">Get In Touch</a>
+</header>
+
+<section class="page-hero">
+  <div class="eyebrow">02 / Systems</div>
+  <h1>AI Agents <span>&amp;</span> Development.</h1>
+  <p>I'm not a traditional developer — I build with AI harnesses like Claude and Codex, fluent in the APIs and the fundamentals, shipping real agents and platforms without writing code the old way. This is a working shelf of what that's produced so far.</p>
+</section>
+
+<div class="grid-wrap">
+  <div class="grid">
+
+    <!-- 1. Kamana Dashboard -->
+    <div class="card">
+      <div class="frame-bar"><div class="frame-dots"><span></span><span></span><span></span></div><div class="frame-url">kamana-os-dashboard.onrender.com</div></div>
+      <div class="demo">
+        <svg viewBox="0 0 190 190">
+          <circle class="k-pulse" cx="95" cy="95" r="10"/><circle class="k-pulse" cx="95" cy="95" r="10"/>
+          <g class="k-line">
+            <line x1="95" y1="95" x2="40" y2="45"/><line x1="95" y1="95" x2="150" y2="45"/>
+            <line x1="95" y1="95" x2="30" y2="105"/><line x1="95" y1="95" x2="160" y2="105"/>
+            <line x1="95" y1="95" x2="55" y2="155"/><line x1="95" y1="95" x2="135" y2="155"/>
+          </g>
+          <circle class="k-node" cx="40" cy="45" r="10"/><circle class="k-node" cx="150" cy="45" r="10"/>
+          <circle class="k-node" cx="30" cy="105" r="10"/><circle class="k-node" cx="160" cy="105" r="10"/>
+          <circle class="k-node" cx="55" cy="155" r="10"/><circle class="k-node" cx="135" cy="155" r="10"/>
+          <circle class="k-core" cx="95" cy="95" r="15"/>
+        </svg>
+      </div>
+      <div class="card-body">
+        <div class="card-idx">01 / DASHBOARD</div>
+        <div class="card-title">Kamana OS</div>
+        <div class="card-tag"><span class="dot"></span>Live</div>
+        <p class="card-desc">One dashboard agent that pulls a business's briefs, tasks, and moving parts into a single command center — built for operators who don't want ten tabs open.</p>
+        <div class="card-actions">
+          <a href="https://kamana-os-dashboard.onrender.com/" target="_blank" rel="noopener" class="btn-launch">Launch <svg viewBox="0 0 15 15" fill="none"><path d="M3 7.5H12M12 7.5L8.5 4M12 7.5L8.5 11" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+        </div>
+      </div>
+    </div>
+
+    <!-- 2. LeadLens -->
+    <div class="card">
+      <div class="frame-bar"><div class="frame-dots"><span></span><span></span><span></span></div><div class="frame-url">leadlens-professional-research.onrender.com</div></div>
+      <div class="demo">
+        <svg viewBox="0 0 190 190">
+          <g transform="translate(20,20)">
+            <line class="l-row" x1="0" y1="10" x2="120" y2="10"/><line class="l-row" x1="0" y1="26" x2="90" y2="26"/>
+            <line class="l-row" x1="0" y1="42" x2="140" y2="42"/><line class="l-row" x1="0" y1="58" x2="100" y2="58"/>
+            <line class="l-row" x1="0" y1="74" x2="130" y2="74"/><line class="l-row" x1="0" y1="90" x2="80" y2="90"/>
+            <line class="l-row" x1="0" y1="106" x2="120" y2="106"/><line class="l-row" x1="0" y1="122" x2="95" y2="122"/>
+            <line class="l-scan" x1="-6" y1="0" x2="146" y2="0" stroke-width="1.5"/>
+          </g>
+          <g class="l-glass" transform="translate(118,118)"><circle cx="0" cy="0" r="22"/><line x1="16" y1="16" x2="34" y2="34"/></g>
+        </svg>
+      </div>
+      <div class="card-body">
+        <div class="card-idx">02 / RESEARCH</div>
+        <div class="card-title">LeadLens</div>
+        <div class="card-tag"><span class="dot"></span>Live</div>
+        <p class="card-desc">Turns public professional signals into usable context — builds source-backed research briefs from a contact list, or pulls up to 100 recent public posts from a LinkedIn profile into a clean CSV.</p>
+        <div class="card-actions">
+          <a href="https://leadlens-professional-research.onrender.com/" target="_blank" rel="noopener" class="btn-launch">Launch <svg viewBox="0 0 15 15" fill="none"><path d="M3 7.5H12M12 7.5L8.5 4M12 7.5L8.5 11" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+          <span class="note-lock"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="10" width="16" height="10" rx="2"/><path d="M8 10V7a4 4 0 018 0v3"/></svg>Password-protected demo</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- 3. AI Clone -->
+    <div class="card">
+      <div class="frame-bar"><div class="frame-dots"><span></span><span></span><span></span></div><div class="frame-url">your-ai-clone.netlify.app</div></div>
+      <div class="demo">
+        <svg viewBox="0 0 190 190">
+          <g transform="translate(0,58)">
+            <g class="c-figure" transform="translate(15,0)"><circle cx="10" cy="10" r="10"/><path d="M-4 46c0-14 9-24 14-24s14 10 14 24z"/></g>
+            <g class="c-figure" transform="translate(45,0)"><circle cx="10" cy="10" r="10"/><path d="M-4 46c0-14 9-24 14-24s14 10 14 24z"/></g>
+            <g class="c-figure main" transform="translate(75,-6)"><circle cx="15" cy="15" r="14"/><path d="M-4 60c0-19 12-32 19-32s19 13 19 32z"/></g>
+            <g class="c-figure" transform="translate(115,0)"><circle cx="10" cy="10" r="10"/><path d="M-4 46c0-14 9-24 14-24s14 10 14 24z"/></g>
+            <g class="c-figure" transform="translate(145,0)"><circle cx="10" cy="10" r="10"/><path d="M-4 46c0-14 9-24 14-24s14 10 14 24z"/></g>
+          </g>
+        </svg>
+      </div>
+      <div class="card-body">
+        <div class="card-idx">03 / CLONING</div>
+        <div class="card-title">Book Your AI Clone</div>
+        <div class="card-tag"><span class="dot"></span>Live</div>
+        <p class="card-desc">Registration front-end for a custom AI-clone service — the intake and booking layer for people who want their own likeness turned into a working AI agent.</p>
+        <div class="card-actions">
+          <a href="https://your-ai-clone.netlify.app/" target="_blank" rel="noopener" class="btn-launch">Launch <svg viewBox="0 0 15 15" fill="none"><path d="M3 7.5H12M12 7.5L8.5 4M12 7.5L8.5 11" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+        </div>
+      </div>
+    </div>
+
+    <!-- 4. MidjourneyCodes -->
+    <div class="card">
+      <div class="frame-bar"><div class="frame-dots"><span></span><span></span><span></span></div><div class="frame-url">midjourneycodes.com</div></div>
+      <div class="demo">
+        <svg viewBox="0 0 190 190">
+          <g transform="translate(19,19)">
+            <defs>
+              <linearGradient id="g1" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#C8FF47"/><stop offset="1" stop-color="#080808"/></linearGradient>
+              <linearGradient id="g2" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#E8003D"/><stop offset="1" stop-color="#080808"/></linearGradient>
+              <linearGradient id="g3" x1="1" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#F0EDE6"/><stop offset="1" stop-color="#080808"/></linearGradient>
+            </defs>
+            <rect class="m-sw" x="0" y="0" width="34" height="34" fill="url(#g1)"/><rect class="m-sw" x="42" y="0" width="34" height="34" fill="url(#g3)" opacity=".6"/><rect class="m-sw" x="84" y="0" width="34" height="34" fill="url(#g2)" opacity=".7"/><rect class="m-sw" x="126" y="0" width="26" height="34" fill="url(#g1)" opacity=".5"/>
+            <rect class="m-sw" x="0" y="42" width="26" height="34" fill="url(#g2)" opacity=".55"/><rect class="m-sw" x="34" y="42" width="34" height="34" fill="url(#g1)" opacity=".8"/><rect class="m-sw" x="76" y="42" width="34" height="34" fill="url(#g3)" opacity=".5"/><rect class="m-sw" x="118" y="42" width="34" height="34" fill="url(#g2)"/>
+            <rect class="m-sw" x="0" y="84" width="34" height="34" fill="url(#g3)" opacity=".7"/><rect class="m-sw" x="42" y="84" width="34" height="34" fill="url(#g2)" opacity=".5"/><rect class="m-sw" x="84" y="84" width="26" height="34" fill="url(#g1)"/><rect class="m-sw" x="118" y="84" width="34" height="34" fill="url(#g3)" opacity=".6"/>
+          </g>
+        </svg>
+      </div>
+      <div class="card-body">
+        <div class="card-idx">04 / MARKETPLACE</div>
+        <div class="card-title">MidjourneyCodes</div>
+        <div class="card-tag"><span class="dot"></span>Live</div>
+        <p class="card-desc">A full-service subscription platform delivering curated Midjourney style-reference codes — a productized catalog for creators who want a consistent visual language, fast.</p>
+        <div class="card-actions">
+          <a href="https://midjourneycodes.com/" target="_blank" rel="noopener" class="btn-launch">Launch <svg viewBox="0 0 15 15" fill="none"><path d="M3 7.5H12M12 7.5L8.5 4M12 7.5L8.5 11" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+        </div>
+      </div>
+    </div>
+
+    <!-- 5. Birthday Agent -->
+    <div class="card">
+      <div class="frame-bar"><div class="frame-dots"><span></span><span></span><span></span></div><div class="frame-url">internal · scheduled agent</div></div>
+      <div class="demo">
+        <svg viewBox="0 0 190 190">
+          <circle class="b-ring" cx="95" cy="78" r="10"/>
+          <g transform="translate(45,38)">
+            <rect x="0" y="8" width="100" height="80" rx="4" fill="none" stroke="var(--white-20)" stroke-width="2"/>
+            <line x1="0" y1="30" x2="100" y2="30" stroke="var(--white-20)" stroke-width="2"/>
+            <line x1="24" y1="0" x2="24" y2="16" stroke="var(--white-20)" stroke-width="2" stroke-linecap="round"/>
+            <line x1="76" y1="0" x2="76" y2="16" stroke="var(--white-20)" stroke-width="2" stroke-linecap="round"/>
+            <rect x="34" y="46" width="22" height="20" fill="var(--lime)"/>
+            <text x="45" y="61" font-family="JetBrains Mono" font-size="11" fill="#080808" text-anchor="middle" font-weight="600">23</text>
+          </g>
+          <g class="b-env" transform="translate(128,100)">
+            <rect x="0" y="0" width="34" height="24" rx="2" fill="none" stroke="var(--lime)" stroke-width="1.6"/>
+            <path d="M0 2L17 15L34 2" fill="none" stroke="var(--lime)" stroke-width="1.6"/>
+          </g>
+        </svg>
+      </div>
+      <div class="card-body">
+        <div class="card-idx">05 / AUTOMATION</div>
+        <div class="card-title">Birthday Agent</div>
+        <div class="card-tag internal"><span class="dot"></span>Internal Tool</div>
+        <p class="card-desc">Watches a contact sheet and fires a personalized birthday email on the day, every time — zero manual tracking, zero missed dates.</p>
+        <div class="card-actions"><span class="btn-soon">Not yet public</span></div>
+      </div>
+    </div>
+
+    <!-- 6. Mass Email Agent -->
+    <div class="card">
+      <div class="frame-bar"><div class="frame-dots"><span></span><span></span><span></span></div><div class="frame-url">internal · airtable mail-merge</div></div>
+      <div class="demo">
+        <svg viewBox="0 0 190 190">
+          <defs>
+            <path id="epath1" d="M28,50 C70,50 90,95 150,95" fill="none"/>
+            <path id="epath2" d="M28,80 C70,80 90,95 150,95" fill="none"/>
+            <path id="epath3" d="M28,110 C70,110 90,95 150,95" fill="none"/>
+          </defs>
+          <g transform="translate(0,0)">
+            <rect x="20" y="42" width="60" height="16" rx="2" fill="none" stroke="var(--white-20)" stroke-width="1.6"/>
+            <rect x="20" y="72" width="60" height="16" rx="2" fill="none" stroke="var(--white-20)" stroke-width="1.6"/>
+            <rect x="20" y="102" width="60" height="16" rx="2" fill="none" stroke="var(--white-20)" stroke-width="1.6"/>
+          </g>
+          <path d="M28,50 C70,50 90,95 150,95" fill="none" stroke="var(--border)" stroke-width="1"/>
+          <path d="M28,80 C70,80 90,95 150,95" fill="none" stroke="var(--border)" stroke-width="1"/>
+          <path d="M28,110 C70,110 90,95 150,95" fill="none" stroke="var(--border)" stroke-width="1"/>
+          <circle class="e-dot d1" r="3" cx="28" cy="50"/>
+          <circle class="e-dot d2" r="3" cx="28" cy="80"/>
+          <circle class="e-dot d3" r="3" cx="28" cy="110"/>
+          <g transform="translate(140,80)">
+            <rect x="0" y="0" width="34" height="26" rx="2" fill="none" stroke="var(--lime)" stroke-width="1.6"/>
+            <path d="M0 2L17 16L34 2" fill="none" stroke="var(--lime)" stroke-width="1.6"/>
+          </g>
+        </svg>
+      </div>
+      <div class="card-body">
+        <div class="card-idx">06 / AUTOMATION</div>
+        <div class="card-title">Mass Email Agent</div>
+        <div class="card-tag internal"><span class="dot"></span>Internal Tool</div>
+        <p class="card-desc">An Airtable-driven mail-merge system — pulls contact records straight from a base and sends personalized email at scale through Brevo, no spreadsheet gymnastics.</p>
+        <div class="card-actions"><span class="btn-soon">Not yet public</span></div>
+      </div>
+    </div>
+
+    <!-- 7. Star Sight -->
+    <div class="card">
+      <div class="frame-bar"><div class="frame-dots"><span></span><span></span><span></span></div><div class="frame-url">star-sight.netlify.app</div></div>
+      <div class="demo">
+        <svg viewBox="0 0 190 190">
+          <g class="s-link">
+            <line x1="30" y1="40" x2="80" y2="30"/><line x1="80" y1="30" x2="130" y2="55"/>
+            <line x1="130" y1="55" x2="150" y2="110"/><line x1="30" y1="40" x2="50" y2="100"/>
+            <line x1="50" y1="100" x2="100" y2="130"/><line x1="100" y1="130" x2="150" y2="110"/>
+          </g>
+          <circle class="s-star" cx="30" cy="40" r="2"/><circle class="s-star" cx="80" cy="30" r="2.4"/>
+          <circle class="s-star big" cx="130" cy="55" r="3.4"/><circle class="s-star" cx="150" cy="110" r="2"/>
+          <circle class="s-star" cx="50" cy="100" r="2.2"/><circle class="s-star big" cx="100" cy="130" r="3"/>
+          <circle class="s-star" cx="20" cy="140" r="1.6"/><circle class="s-star" cx="165" cy="30" r="1.6"/>
+          <circle class="s-star" cx="110" cy="20" r="1.4"/><circle class="s-star" cx="165" cy="150" r="1.8"/>
+        </svg>
+      </div>
+      <div class="card-body">
+        <div class="card-idx">07 / PLATFORM</div>
+        <div class="card-title">Star Sight</div>
+        <div class="card-tag"><span class="dot"></span>Live</div>
+        <p class="card-desc">The front end of a demo platform built around meaningful content — a first look at what surfacing signal over noise can look like.</p>
+        <div class="card-actions">
+          <a href="https://star-sight.netlify.app/" target="_blank" rel="noopener" class="btn-launch">Launch <svg viewBox="0 0 15 15" fill="none"><path d="M3 7.5H12M12 7.5L8.5 4M12 7.5L8.5 11" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+        </div>
+      </div>
+    </div>
+
+    <!-- 8. Zoom-Notion Automation -->
+    <div class="card">
+      <div class="frame-bar"><div class="frame-dots"><span></span><span></span><span></span></div><div class="frame-url">internal · zoom → notion pipeline</div></div>
+      <div class="demo">
+        <svg viewBox="0 0 190 190">
+          <g class="z-pulse" transform="translate(24,68)">
+            <rect x="0" y="0" width="56" height="40" rx="6" fill="none" stroke="var(--white-20)" stroke-width="2"/>
+            <path d="M56 14L74 4V64L56 54Z" fill="none" stroke="var(--white-20)" stroke-width="2"/>
+            <circle cx="28" cy="20" r="7" fill="none" stroke="var(--white-20)" stroke-width="1.6"/>
+          </g>
+          <path class="z-dash" d="M96,88 H126" fill="none"/>
+          <path d="M120,82 L128,88 L120,94" fill="none" stroke="var(--lime)" stroke-width="1.4"/>
+          <g transform="translate(132,58)">
+            <rect x="0" y="0" width="46" height="60" rx="3" fill="none" stroke="var(--lime)" stroke-width="1.6"/>
+            <line x1="8" y1="14" x2="38" y2="14" stroke="var(--lime)" stroke-width="1.4"/>
+            <line x1="8" y1="26" x2="38" y2="26" stroke="var(--lime)" stroke-width="1.4"/>
+            <line x1="8" y1="38" x2="30" y2="38" stroke="var(--lime)" stroke-width="1.4"/>
+            <path d="M8 49l4 4 8-8" fill="none" stroke="var(--lime)" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+          </g>
+        </svg>
+      </div>
+      <div class="card-body">
+        <div class="card-idx">08 / AUTOMATION</div>
+        <div class="card-title">Zoom → Notion</div>
+        <div class="card-tag internal"><span class="dot"></span>Internal Tool</div>
+        <p class="card-desc">Pulls the notes from a Zoom call, cleans them up, and files them straight into Notion — running on a schedule, no copy-paste required.</p>
+        <div class="card-actions"><span class="btn-soon">Not yet public</span></div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<footer>
+  <span>© 2026 Karan Kothari. All rights reserved.</span>
+  <a href="https://calendly.com/karan-kathori" target="_blank" style="color:var(--white-40);text-decoration:none;">Have a build in mind? Let's talk →</a>
+</footer>
+
+</body>
+</html>
