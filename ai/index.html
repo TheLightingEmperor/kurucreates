@@ -396,28 +396,8 @@
   .media-hint { position: absolute; right: 12px; bottom: 12px; z-index: 2; font-family: var(--mono); font-size: 9px; letter-spacing: .12em; text-transform: uppercase; color: var(--white-60); background: rgba(8,8,8,.7); padding: 5px 9px; border-radius: 20px; transition: opacity .3s; }
   .card:hover .media-hint { opacity: 0; }
 
-  /* neko planet */
-  .planet { background: radial-gradient(circle at 50% 120%, #ffd9b0 0%, #f6b4a2 30%, #8e6bb5 65%, #2b2346 100%); }
-  .planet svg { position: absolute; left: 50%; top: 58%; width: 330px; height: 330px; transform: translate(-50%, 0); }
-  .planet .spin { transform-origin: 165px 165px; animation: spin 40s linear infinite; }
-  .planet .cat { animation: hop .6s ease-in-out infinite alternate; transform-origin: 165px 30px; }
-  @keyframes spin { to { transform: rotate(-360deg); } }
-  @keyframes hop { to { transform: translateY(-3px); } }
-  .planet .star { position: absolute; width: 2px; height: 2px; background: #fff; border-radius: 50%; opacity: .7; animation: tw 3s ease-in-out infinite; }
-  @keyframes tw { 50% { opacity: .15; } }
-  .planet h4 { position: absolute; left: 0; right: 0; top: 34px; text-align: center; font-family: var(--disp); font-weight: 400; font-size: 44px; color: #fff; letter-spacing: .04em; text-shadow: 0 4px 20px rgba(43,35,70,.6); }
-  .planet h4 small { display: block; font-family: var(--mono); font-size: 11px; letter-spacing: .3em; opacity: .85; margin-top: 4px; }
-
-  .trio { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 20px; }
-
-  /* ── LAB ────────────────────────────────────── */
-  .lab { border-top: 1px solid var(--border); }
-  .lab-row { display: grid; grid-template-columns: 60px minmax(0, 1fr) minmax(0, 1.8fr) 250px; gap: 24px; align-items: center; padding: 22px 6px; border-bottom: 1px solid var(--border); transition: background .25s, padding .25s; }
-  .lab-row:hover { background: rgba(240,237,230,.025); padding-left: 14px; }
-  .lab-row .n { font-family: var(--mono); font-size: 10px; color: var(--white-40); letter-spacing: .14em; }
-  .lab-row h4 { font-family: var(--disp); font-weight: 400; font-size: 26px; line-height: 1; letter-spacing: .01em; }
-  .lab-row p { font-size: 13px; color: var(--white-60); line-height: 1.6; }
-  .lab-row .chips { margin: 0; justify-content: flex-end; }
+  .trio { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px; }
+  .trio .media { height: 340px; }
 
   /* ── ARCHIVE (earlier builds) ───────────────── */
   .archive { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 16px; }
@@ -485,12 +465,10 @@
 
   /* ── RESPONSIVE ─────────────────────────────── */
   @media (max-width: 1180px) {
-    .bento, .trio { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .bento { grid-template-columns: repeat(2, minmax(0, 1fr)); }
     .archive { grid-template-columns: repeat(2, minmax(0, 1fr)); }
     .feature { grid-template-columns: 1fr; }
     .reel { min-height: 380px; }
-    .lab-row { grid-template-columns: 50px 1fr 2fr; }
-    .lab-row .chips { grid-column: 2 / -1; justify-content: flex-start; }
   }
   @media (max-width: 900px) {
     .card.wide { flex-direction: column; }
@@ -526,9 +504,6 @@
     .demo { height: 290px; }
     .reel { min-height: 260px; }
     .feature-body { padding: 26px 22px; }
-    .lab-row { grid-template-columns: 1fr; gap: 8px; padding: 20px 0; }
-    .lab-row:hover { padding-left: 0; }
-    .lab-row .chips { grid-column: auto; }
     .cta { padding: 0 16px; }
     .cta-box { flex-direction: column; align-items: flex-start; padding: 40px 24px; }
     footer { flex-direction: column; gap: 10px; text-align: center; padding: 20px; }
@@ -562,7 +537,7 @@
     <div class="stats">
       <div class="stat"><b data-count="12"><em>0</em></b><span>New builds · Oct 2026</span></div>
       <div class="stat"><b data-count="6"><em>0</em></b><span>Voice AI providers wired</span></div>
-      <div class="stat"><b data-count="4"><em>0</em></b><span>Playable in your browser</span></div>
+      <div class="stat"><b data-count="3"><em>0</em></b><span>Playable in your browser</span></div>
       <div class="stat"><b data-count="3"><em>0</em></b><span>Agents running every day</span></div>
     </div>
   </div>
@@ -609,7 +584,7 @@
       </div>
       <div class="card-body">
         <div class="card-meta"><span class="card-idx">N° 01 · Platform</span><span class="status live">In production</span></div>
-        <h3 class="card-title">Kamana AI Harness</h3>
+        <h3 class="card-title">Multi-Agent AI Harness</h3>
         <p class="card-desc">A multi-agent assistant platform. Talk to agents by text or <strong>hands-free voice</strong> and they act inside your apps: Gmail, Calendar, Notion, HubSpot, Asana. They search an organisation's own knowledge base and remember you across every conversation. This month: <strong>six swappable voice providers</strong> behind one relay, including Hindi through Sarvam, plus free-model routing and a stability pass.</p>
         <ul class="chips"><li>LangGraph</li><li>Postgres + pgvector</li><li>WebRTC + WS relay</li><li>Composio tools</li><li>React 19</li><li>Render</li></ul>
       </div>
@@ -783,7 +758,7 @@
 <section class="section" id="play">
   <div class="section-head rv">
     <h2><small>§ 02 — Hands on</small>Games &amp; 3D</h2>
-    <p>Everything is generated in code: worlds, characters, meshes and textures. There are no asset packs. Play the games or spin the models right here.</p>
+    <p>Everything is generated in code: worlds, characters, meshes and textures. There are no asset packs. Play the game or spin the models right here.</p>
   </div>
 
   <article class="feature card rv" data-cat="games">
@@ -819,38 +794,6 @@
 
   <div class="trio">
     <article class="card rv" data-cat="games">
-      <div class="media planet" aria-hidden="true">
-        <span class="star" style="left:12%;top:20%"></span><span class="star" style="left:78%;top:14%;animation-delay:1s"></span><span class="star" style="left:64%;top:34%;animation-delay:2s"></span><span class="star" style="left:24%;top:42%;animation-delay:.5s"></span><span class="star" style="left:88%;top:44%;animation-delay:1.6s"></span>
-        <h4>ねこ便<small>NEKO-BIN</small></h4>
-        <svg viewBox="0 0 330 330">
-          <g class="spin">
-            <circle cx="165" cy="165" r="150" fill="#7fb77e"/>
-            <circle cx="165" cy="165" r="150" fill="none" stroke="#5e9a62" stroke-width="6"/>
-            <circle cx="165" cy="165" r="118" fill="#6aa56c"/>
-            <g fill="#f3e6d3" stroke="#3b2f4a" stroke-width="2">
-              <g transform="rotate(-50 165 165)"><rect x="150" y="2" width="30" height="24"/><path d="M146 4l19-16 19 16z" fill="#c0504d"/></g>
-              <g transform="rotate(-18 165 165)"><rect x="152" y="4" width="26" height="20"/><path d="M148 6l17-13 17 13z" fill="#3d5a80"/></g>
-              <g transform="rotate(28 165 165)"><rect x="150" y="2" width="30" height="24"/><path d="M146 4l19-16 19 16z" fill="#c0504d"/></g>
-              <g transform="rotate(60 165 165)"><rect x="154" y="6" width="22" height="18"/><path d="M150 8l15-12 15 12z" fill="#e0a458"/></g>
-              <g transform="rotate(115 165 165)"><rect x="150" y="2" width="30" height="24"/><path d="M146 4l19-16 19 16z" fill="#3d5a80"/></g>
-              <g transform="rotate(160 165 165)"><rect x="152" y="4" width="26" height="20"/><path d="M148 6l17-13 17 13z" fill="#c0504d"/></g>
-              <g transform="rotate(-100 165 165)"><rect x="152" y="4" width="26" height="20"/><path d="M148 6l17-13 17 13z" fill="#e0a458"/></g>
-            </g>
-            <g fill="#3f7d4a"><circle cx="165" cy="12" r="9" transform="rotate(-34 165 165)"/><circle cx="165" cy="12" r="11" transform="rotate(10 165 165)"/><circle cx="165" cy="12" r="8" transform="rotate(44 165 165)"/><circle cx="165" cy="12" r="10" transform="rotate(88 165 165)"/><circle cx="165" cy="12" r="9" transform="rotate(-76 165 165)"/></g>
-          </g>
-          <g class="cat"><ellipse cx="165" cy="10" rx="9" ry="7" fill="#f6efe6" stroke="#3b2f4a" stroke-width="1.6"/><path d="M158 6l1-8 5 5M172 6l-1-8-5 5" fill="#f6efe6" stroke="#3b2f4a" stroke-width="1.6" stroke-linejoin="round"/><circle cx="162" cy="9" r="1" fill="#3b2f4a"/><circle cx="168" cy="9" r="1" fill="#3b2f4a"/></g>
-        </svg>
-      </div>
-      <div class="card-body">
-        <div class="card-meta"><span class="card-idx">N° 11 · Game</span><span class="status live">Playable</span></div>
-        <h3 class="card-title">Neko-bin</h3>
-        <p class="card-desc">The original: a tiny planet wrapped in a Japanese town, where you find lost kittens and walk them home. Every building, texture and character is generated in code. It's the engine Dilli Billi grew out of.</p>
-        <ul class="chips"><li>Three.js</li><li>BVH collisions</li><li>Procedural town</li></ul>
-        <div class="card-actions"><a class="btn" href="play/neko-bin/" target="_blank" rel="noopener">Play in browser <svg viewBox="0 0 15 15" fill="none"><path d="M4 2.5l8 5-8 5z" fill="currentColor"/></svg></a></div>
-      </div>
-    </article>
-
-    <article class="card rv" data-cat="games">
       <div class="media" data-hovervid>
         <img src="media/ws-01_hero.jpg" alt="Red, black and white web-shooter gauntlet render" loading="lazy" />
         <video src="media/ws-thwip.mp4" muted loop playsinline preload="none" class="alt" aria-hidden="true"></video>
@@ -858,7 +801,7 @@
         <span class="media-hint">Hover · thwip</span>
       </div>
       <div class="card-body">
-        <div class="card-meta"><span class="card-idx">N° 12 · 3D Print</span><span class="status live">Interactive 3D</span></div>
+        <div class="card-meta"><span class="card-idx">N° 11 · 3D Print</span><span class="status live">Interactive 3D</span></div>
         <h3 class="card-title">Web-Shooter Gauntlet</h3>
         <p class="card-desc">An Arcane-style wearable built procedurally in Blender. It comes as 49 watertight, 3D-printable STLs with a <strong>working spring-piston and palm trigger</strong>. Every part is checked for interference across the whole firing animation, and the full rebuild takes 2.4 seconds.</p>
         <ul class="chips"><li>Blender · Python</li><li>Manifold booleans</li><li>Finger IK</li><li>STL + BOM</li></ul>
@@ -874,7 +817,7 @@
         <span class="media-hint">Hover · dismantle</span>
       </div>
       <div class="card-body">
-        <div class="card-meta"><span class="card-idx">N° 13 · 3D</span><span class="status live">Interactive 3D</span></div>
+        <div class="card-meta"><span class="card-idx">N° 12 · 3D</span><span class="status live">Interactive 3D</span></div>
         <h3 class="card-title">Flintlock, Dismantled</h3>
         <p class="card-desc">Rebuilt from a single photo of an antique holster pistol: 40 separate parts, walnut and engraving textures generated in code, and a rig that cocks the hammer, opens the frizzen, pulls the trigger and <strong>takes the whole thing apart</strong>. It rebuilds headless in about 3 seconds.</p>
         <ul class="chips"><li>Blender · Python</li><li>Drivers + rig</li><li>GLB / FBX / OBJ</li></ul>
@@ -884,40 +827,10 @@
   </div>
 </section>
 
-<!-- ═══════════ LAB ═══════════ -->
-<section class="section" id="lab">
-  <div class="section-head rv">
-    <h2><small>§ 03 — Smaller things, same month</small>Also In The Lab</h2>
-    <p>Quick builds, upgrades and experiments that didn't need a full demo.</p>
-  </div>
-  <div class="lab">
-    <div class="lab-row rv" data-cat="automations">
-      <span class="n">N° 14</span><h4>Kamana OS · Morning Brief</h4>
-      <p>A cloud routine writes a 7am brief each day: schedule, important emails, messages that need a reply, pipeline, and action items you can check off. It sits on top of the live dashboard.</p>
-      <ul class="chips"><li>Cloud routine</li><li>Static JSON</li></ul>
-    </div>
-    <div class="lab-row rv" data-cat="platforms">
-      <span class="n">N° 15</span><h4>Intelligence, Category #2</h4>
-      <p>The Creative Intelligence pipeline, re-themed for a new product category in a single day: 12 SKUs, 60 keywords and 47 studies loaded with zero rejects.</p>
-      <ul class="chips"><li>Reusable seed format</li><li>Research ledger</li></ul>
-    </div>
-    <div class="lab-row rv" data-cat="games">
-      <span class="n">N° 16</span><h4>RE4 Remake Trainer</h4>
-      <p>A Lua mod suite for Resident Evil 4 Remake with 14 modules: full character swaps, item search, noclip and fly, and a "fun" department. It's backed by an offline test harness of 328 checks, including a regression test for a title-screen freeze.</p>
-      <ul class="chips"><li>REFramework</li><li>Lua</li><li>Experimental</li></ul>
-    </div>
-    <div class="lab-row rv" data-cat="platforms">
-      <span class="n">N° 17</span><h4>Own Your Intelligence</h4>
-      <p>A three-page brand deck where two of the pages were flattened images. I rebuilt it pixel by pixel as an interactive microsite.</p>
-      <ul class="chips"><li>Static site</li><li>Netlify</li></ul>
-    </div>
-  </div>
-</section>
-
 <!-- ═══════════ EARLIER ═══════════ -->
 <section class="section" id="earlier">
   <div class="section-head rv">
-    <h2><small>§ 04 — The shelf</small>Earlier Builds</h2>
+    <h2><small>§ 03 — The shelf</small>Earlier Builds</h2>
     <p>Where it started: dashboards, research tools, storefronts and the first automations.</p>
   </div>
   <div class="archive">
@@ -930,10 +843,10 @@
         <circle class="k-core" cx="95" cy="95" r="15"/>
       </svg></div>
       <div class="card-body">
-        <div class="card-meta"><span class="card-idx">Dashboard</span><span class="status live">Live</span></div>
-        <h3 class="card-title">Kamana OS</h3>
+        <div class="card-meta"><span class="card-idx">Dashboard</span><span class="status live">Live · private</span></div>
+        <h3 class="card-title">Executive OS</h3>
         <p class="card-desc">A command-center dashboard that pulls an operator's meetings, notes, pipeline, news and daily brief into one view.</p>
-        <div class="card-actions"><a href="https://kamana-os-dashboard.onrender.com/" target="_blank" rel="noopener" class="btn">Launch <svg viewBox="0 0 15 15" fill="none"><path d="M3 7.5H12M12 7.5L8.5 4M12 7.5L8.5 11" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></a></div>
+        <div class="card-actions"><span class="btn-soon">Private client build</span></div>
       </div>
     </div>
 
