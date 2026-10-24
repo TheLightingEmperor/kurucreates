@@ -1,0 +1,486 @@
+<title>Web Shooter Gauntlet</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@600;800&family=Hanken+Grotesk:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: one workshop bench — the live model fills the stage, the build sheet sits beside it (stacks under it on phones). */
+:root {
+  --bg: #0d0b10;          /* Zaun night, violet-biased black */
+  --stage: #120f16;
+  --panel: #18141c;
+  --line: #2d2532;
+  --fg: #ece6dd;          /* bone-white enamel */
+  --muted: #9b9097;
+  --red: #d0232d;         /* signal-red paint */
+  --red-soft: #3a1418;
+  --teal: #55c6da;        /* rim-light teal for live readouts */
+  --black-part: #3b3d44;
+  --white-part: #e7e0d2;
+  --clear-part: #9fd3e6;
+  --f-display: "Big Shoulders Display", "Arial Narrow", "Helvetica Neue", sans-serif;
+  --f-body: "Hanken Grotesk", "Helvetica Neue", Arial, sans-serif;
+  --f-mono: "JetBrains Mono", ui-monospace, Menlo, monospace;
+  --r: 6px;
+  color-scheme: dark;
+}
+html { min-height: 100%; }
+body {
+  background: var(--bg); color: var(--fg); font-family: var(--f-body); font-size: 14px; line-height: 1.5;
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: 14px 18px; box-sizing: border-box; display: flex; flex-direction: column; gap: 12px;
+}
+*, *::before, *::after { box-sizing: border-box; }
+header { display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 8px 24px; }
+h1 { font-family: var(--f-display); font-weight: 800; font-size: clamp(30px, 4.4vw, 46px); letter-spacing: 0.02em;
+  line-height: 0.95; margin: 0; text-transform: uppercase; text-wrap: balance; }
+h1 span { color: var(--red); }
+.sub { color: var(--muted); margin: 4px 0 0; max-width: 62ch; }
+.chips { display: flex; flex-wrap: wrap; gap: 6px; }
+.chip { font-family: var(--f-mono); font-size: 11.5px; border: 1px solid var(--line); border-radius: 999px; padding: 3px 10px;
+  color: var(--fg); white-space: nowrap; font-variant-numeric: tabular-nums; }
+.app { height: clamp(560px, 84vh, 920px); display: grid; grid-template-columns: minmax(0, 1fr) 360px; gap: 12px; }
+.stage { position: relative; min-height: 420px; border-radius: var(--r); overflow: hidden;
+  background: radial-gradient(120% 90% at 30% 20%, #1c1622 0%, var(--stage) 55%, #0a080c 100%); border: 1px solid var(--line); }
+#view { position: absolute; inset: 0; width: 100%; height: 100%; display: block; touch-action: none; cursor: grab; }
+#view:active { cursor: grabbing; }
+.hint { position: absolute; left: 12px; top: 10px; font-size: 12px; color: var(--muted); pointer-events: none; }
+.loading { position: absolute; inset: 0; display: grid; place-items: center; text-align: center; gap: 8px; pointer-events: none; }
+.loading .bar { width: min(260px, 60vw); height: 3px; background: var(--line); border-radius: 2px; overflow: hidden; margin: 8px auto 0; }
+.loading .bar i { display: block; height: 100%; width: 0; background: var(--red); transition: width .2s; }
+.loading p { margin: 0; font-family: var(--f-mono); font-size: 12px; color: var(--muted); }
+.transport { position: absolute; left: 0; right: 0; bottom: 0; display: flex; align-items: center; gap: 12px; flex-wrap: wrap;
+  padding: 10px 12px; background: linear-gradient(to top, rgba(10,8,12,.92), rgba(10,8,12,0)); }
+.thwip { font-family: var(--f-display); font-weight: 800; font-size: 20px; letter-spacing: .08em; text-transform: uppercase;
+  background: var(--red); color: #fff7f2; border: 0; border-radius: var(--r); padding: 8px 18px 7px; cursor: pointer; }
+.thwip:hover { filter: brightness(1.12); }
+.thwip:focus-visible, button:focus-visible, input:focus-visible { outline: 2px solid var(--teal); outline-offset: 2px; }
+.scrub { flex: 1; min-width: 140px; display: flex; align-items: center; gap: 10px; }
+.scrub input { flex: 1; accent-color: var(--red); }
+.frame { font-family: var(--f-mono); font-size: 12px; color: var(--muted); font-variant-numeric: tabular-nums; min-width: 9ch; }
+.panel { min-width: 0; display: flex; flex-direction: column; gap: 10px; overflow: auto; max-height: 100%; }
+.card { background: var(--panel); border: 1px solid var(--line); border-radius: var(--r); padding: 12px 14px; display: flex; flex-direction: column; gap: 10px; }
+.card h2 { margin: 0; font-family: var(--f-display); font-weight: 600; font-size: 17px; letter-spacing: .06em; text-transform: uppercase; }
+.readout { display: grid; grid-template-columns: auto 1fr auto; gap: 6px 10px; align-items: center; font-family: var(--f-mono); font-size: 12px; }
+.readout .k { color: var(--muted); }
+.readout .meter { height: 4px; background: var(--line); border-radius: 2px; overflow: hidden; }
+.readout .meter i { display: block; height: 100%; width: 0; background: var(--teal); }
+.readout .v { text-align: right; font-variant-numeric: tabular-nums; min-width: 7ch; }
+.state { display: flex; gap: 6px; flex-wrap: wrap; }
+.pill { font-family: var(--f-mono); font-size: 11px; padding: 2px 8px; border-radius: 999px; border: 1px solid var(--line); color: var(--muted); }
+.pill.on { border-color: var(--teal); color: var(--teal); }
+.pill.hot { border-color: var(--red); color: #ff8a8f; background: var(--red-soft); }
+.row { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+.row label { color: var(--muted); font-size: 12.5px; }
+.row input[type=range] { flex: 1; accent-color: var(--red); min-width: 120px; }
+.toggles { display: flex; flex-wrap: wrap; gap: 6px; }
+.tog, .cf { font: 500 12.5px var(--f-body); color: var(--fg); background: transparent; border: 1px solid var(--line); border-radius: 999px;
+  padding: 4px 11px; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; }
+.tog[aria-pressed=true], .cf[aria-pressed=true] { border-color: var(--fg); background: #241e28; }
+.dot { width: 9px; height: 9px; border-radius: 50%; display: inline-block; flex: none; border: 1px solid rgba(255,255,255,.18); }
+.dot.red { background: var(--red); } .dot.black { background: var(--black-part); } .dot.white { background: var(--white-part); }
+.dot.clear { background: var(--clear-part); }
+.sel-empty { color: var(--muted); margin: 0; }
+.sel h3 { margin: 0; font-family: var(--f-display); font-weight: 800; font-size: 22px; letter-spacing: .03em; }
+.kv { display: grid; grid-template-columns: 92px 1fr; gap: 4px 10px; font-size: 12.5px; }
+.kv dt { color: var(--muted); } .kv dd { margin: 0; min-width: 0; overflow-wrap: anywhere; }
+.kv .mono { font-family: var(--f-mono); font-size: 12px; font-variant-numeric: tabular-nums; }
+.note { margin: 0; font-size: 13px; color: var(--fg); }
+.parts { display: flex; flex-direction: column; gap: 10px; }
+.grp h4 { margin: 0 0 4px; font-family: var(--f-mono); font-weight: 500; font-size: 11px; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); }
+.grp ul { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: 1fr 1fr; gap: 2px 8px; }
+.grp button { width: 100%; text-align: left; background: none; border: 0; color: var(--fg); font: 12.5px var(--f-body); padding: 3px 4px;
+  border-radius: 4px; cursor: pointer; display: flex; align-items: center; gap: 7px; min-width: 0; }
+.grp button span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.grp button:hover { background: #221c26; }
+.grp button[aria-current=true] { background: var(--red-soft); }
+.bom { margin: 0; padding: 0; list-style: none; font-size: 12.5px; display: flex; flex-direction: column; gap: 3px; }
+.bom li { display: grid; grid-template-columns: 3ch 1fr; gap: 8px; }
+.bom b { font-family: var(--f-mono); font-weight: 500; color: var(--teal); text-align: right; font-variant-numeric: tabular-nums; }
+details summary { cursor: pointer; font-family: var(--f-display); font-weight: 600; font-size: 17px; letter-spacing: .06em; text-transform: uppercase; }
+.gallery { display: flex; flex-direction: column; gap: 12px; padding-block: 8px 4px; }
+.gallery h2 { margin: 0; font-family: var(--f-display); font-weight: 800; font-size: 26px; letter-spacing: .04em; text-transform: uppercase; }
+.shots { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
+.shots figure, .film { margin: 0; background: var(--panel); border: 1px solid var(--line); border-radius: var(--r); overflow: hidden; }
+.shots img, .film video { display: block; width: 100%; height: auto; aspect-ratio: 16 / 9; object-fit: cover; background: #000; }
+.shots figcaption, .film figcaption { padding: 8px 12px 10px; font-size: 12.5px; color: var(--muted); }
+.shots figcaption b, .film figcaption b { color: var(--fg); font-weight: 600; }
+.film { max-width: 100%; }
+@media (max-width: 900px) {
+  .app { grid-template-columns: minmax(0, 1fr); height: auto; }
+  .shots { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .stage { min-height: 62vh; }
+  .panel { max-height: none; overflow: visible; }
+}
+@media (max-width: 560px) { .shots { grid-template-columns: minmax(0, 1fr); } }
+@media (prefers-reduced-motion: reduce) { .loading .bar i { transition: none; } }
+</style>
+
+<header>
+  <div>
+    <h1>Web Shooter <span>Gauntlet</span></h1>
+    <p class="sub">Spring-piston wrist launcher on a hinged bracer. Curl your two middle fingers onto the palm pad and a Bowden cable trips the sear. Drag to orbit, then press Thwip.</p>
+  </div>
+  <div class="chips" id="chips"></div>
+</header>
+
+<main class="app">
+  <section class="stage" aria-label="3D model">
+    <canvas id="view"></canvas>
+    <div class="hint">Drag to orbit · scroll or pinch to zoom · click a part</div>
+    <div class="loading" id="loading"><div><p id="loadmsg">Loading model…</p><div class="bar"><i id="loadbar"></i></div></div></div>
+    <div class="transport">
+      <button class="thwip" id="thwip" type="button">Thwip</button>
+      <div class="scrub"><input id="scrub" type="range" min="1" max="132" step="0.1" value="1" aria-label="Animation frame"><span class="frame" id="frame">f 1 / 132</span></div>
+    </div>
+  </section>
+
+  <aside class="panel">
+    <section class="card" aria-label="Trigger mechanism">
+      <h2>Trigger train</h2>
+      <div class="readout">
+        <span class="k">Palm pad</span><span class="meter"><i id="m-pad"></i></span><span class="v" id="v-pad">0.00 mm</span>
+        <span class="k">Bellcrank</span><span class="meter"><i id="m-bell"></i></span><span class="v" id="v-bell">0.0°</span>
+        <span class="k">Wire pull</span><span class="meter"><i id="m-wire"></i></span><span class="v" id="v-wire">0.00 mm</span>
+        <span class="k">Sear</span><span class="meter"><i id="m-sear"></i></span><span class="v" id="v-sear">0.0°</span>
+      </div>
+      <div class="state"><span class="pill on" id="s-cocked">Cocked</span><span class="pill" id="s-release">Sear released (15°)</span><span class="pill" id="s-flight">Dart in flight</span></div>
+    </section>
+
+    <section class="card" aria-label="View options">
+      <h2>View</h2>
+      <div class="row"><label for="explode">Explode</label><input id="explode" type="range" min="0" max="1" step="0.01" value="0"></div>
+      <div class="toggles">
+        <button class="tog" id="t-hand" type="button" aria-pressed="true">Mannequin</button>
+        <button class="tog" id="t-hw" type="button" aria-pressed="true">Hardware</button>
+        <button class="tog" id="t-fx" type="button" aria-pressed="true">Web line</button>
+      </div>
+      <div class="toggles" id="colorfilter" aria-label="Show print colour">
+        <button class="cf" type="button" data-c="all" aria-pressed="true">All parts</button>
+        <button class="cf" type="button" data-c="red" aria-pressed="false"><i class="dot red"></i>Red</button>
+        <button class="cf" type="button" data-c="black" aria-pressed="false"><i class="dot black"></i>Black</button>
+        <button class="cf" type="button" data-c="white" aria-pressed="false"><i class="dot white"></i>White</button>
+        <button class="cf" type="button" data-c="clear" aria-pressed="false"><i class="dot clear"></i>Clear</button>
+      </div>
+    </section>
+
+    <section class="card sel" aria-live="polite" id="sel">
+      <h2>Selected part</h2>
+      <p class="sel-empty">Click any printed part on the model, or pick one from the list below.</p>
+    </section>
+
+    <section class="card">
+      <h2>Print parts</h2>
+      <div class="parts" id="parts"></div>
+    </section>
+
+    <section class="card">
+      <details><summary>Hardware</summary>
+        <ul class="bom" id="bom"></ul>
+      </details>
+    </section>
+  </aside>
+</main>
+
+<section class="gallery" aria-label="Renders">
+  <h2>Renders</h2>
+  <figure class="film"><video src="renders/thwip.mp4" poster="renders/02_thwip_fire.jpg" autoplay muted loop playsinline controls></video>
+    <figcaption><b>Thwip, 5.5 s.</b> Wrist extends, two fingers press the pad, the sear lets go and the dart leaves with its line. Rendered in Cycles from the same rig.</figcaption></figure>
+  <div class="shots">
+    <figure><img src="renders/01_hero.jpg" alt="Gauntlet on a forearm, three-quarter view" loading="lazy"><figcaption><b>Cocked and loaded.</b> Clamshell bracer, wrist lames, hex-badge hand plate.</figcaption></figure>
+    <figure><img src="renders/02_thwip_fire.jpg" alt="Hand in the thwip pose firing a web line" loading="lazy"><figcaption><b>Thwip pose.</b> Wrist up 15°, middle and ring fingers on the pad.</figcaption></figure>
+    <figure><img src="renders/03_palm_trigger.jpg" alt="Fingertips pressing the hex trigger pad in the palm" loading="lazy"><figcaption><b>Palm trigger.</b> The Bowden cable runs from the pad housing down to the sear.</figcaption></figure>
+    <figure><img src="renders/04_shooter_detail.jpg" alt="Shooter module close-up from below" loading="lazy"><figcaption><b>Shooter.</b> Knurled rear cap, web-fluid vial, pressure gauge, spider-vent muzzle.</figcaption></figure>
+    <figure><img src="renders/05_hand_armour.jpg" alt="Back of the hand with spider badge and knuckle caps" loading="lazy"><figcaption><b>Hand armour.</b> Hextech badge with spider inlay, knuckle caps, finger scales.</figcaption></figure>
+    <figure><img src="renders/06_exploded.jpg" alt="Exploded view of all printed parts" loading="lazy"><figcaption><b>Exploded.</b> 49 printed parts in their filament colours.</figcaption></figure>
+  </div>
+</section>
+
+<script type="importmap">
+{ "imports": {
+  "three": "https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js",
+  "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/"
+} }
+</script>
+<script>
+window.PARTS = [{"part": "Bracer_Bottom", "group": "Bracer", "color": "black", "material": "PLA+ / PETG, matte black", "size_mm": "110.8 x 157.9 x 46.1", "volume_cm3": 61.77, "est_grams": 42.1, "file": "stl/black/01_Bracer_Bottom.stl", "notes": "Clamshell bottom; shooter mounts here with 4 countersunk M3x10. Print seam-edge down, supports under knuckles and keeper."}, {"part": "Bracer_Spine", "group": "Bracer", "color": "black", "material": "PLA+ / PETG, matte black", "size_mm": "17.5 x 128.3 x 11.5", "volume_cm3": 6.44, "est_grams": 4.4, "file": "stl/black/02_Bracer_Spine.stl", "notes": "Glue-on spine; 3 pegs into the top shell. Print flat side down."}, {"part": "Bracer_Top", "group": "Bracer", "color": "red", "material": "PLA+ / PETG, signal red", "size_mm": "113.6 x 157.8 x 43.9", "volume_cm3": 61.73, "est_grams": 42.1, "file": "stl/red/03_Bracer_Top.stl", "notes": "Clamshell top. Print on its back edge (seam down) with tree supports under the hinge knuckles; 4 walls, 15% gyroid."}, {"part": "Cuff_Trim_Bottom", "group": "Bracer", "color": "white", "material": "PLA+ / PETG, bone white", "size_mm": "111.2 x 13.6 x 43.2", "volume_cm3": 4.6, "est_grams": 3.1, "file": "stl/white/04_Cuff_Trim_Bottom.stl", "notes": "Elbow cuff trim; 3 pegs. Print inner face down on a smooth sheet."}, {"part": "Cuff_Trim_Top", "group": "Bracer", "color": "white", "material": "PLA+ / PETG, bone white", "size_mm": "111.2 x 13.6 x 41.0", "volume_cm3": 4.53, "est_grams": 3.1, "file": "stl/white/05_Cuff_Trim_Top.stl", "notes": "Elbow cuff trim; 3 pegs. Print inner face down on a smooth sheet."}, {"part": "Latch_Lever", "group": "Bracer", "color": "white", "material": "PLA+ / PETG, bone white", "size_mm": "10.8 x 16.2 x 21.9", "volume_cm3": 1.47, "est_grams": 1.0, "file": "stl/white/06_Latch_Lever.stl", "notes": "Cam latch; pivots on a 3 mm pin through the top-shell ears, hook snaps under the bottom keeper. Print on its side."}, {"part": "Wrist_Lame_1", "group": "Wrist", "color": "black", "material": "PLA+ / PETG, matte black", "size_mm": "83.9 x 24.6 x 20.4", "volume_cm3": 5.98, "est_grams": 4.1, "file": "stl/black/07_Wrist_Lame_1.stl", "notes": "Outer wrist lame; slotted (Almain) rivets let it slide as the wrist bends."}, {"part": "Wrist_Lame_2", "group": "Wrist", "color": "red", "material": "PLA+ / PETG, signal red", "size_mm": "84.0 x 27.2 x 17.4", "volume_cm3": 6.24, "est_grams": 4.3, "file": "stl/red/08_Wrist_Lame_2.stl", "notes": "Inner wrist lame; the hand plate slides over its distal end."}, {"part": "Hand_Plate", "group": "Hand", "color": "red", "material": "PLA+ / PETG, signal red", "size_mm": "80.3 x 76.3 x 19.3", "volume_cm3": 16.36, "est_grams": 11.2, "file": "stl/red/09_Hand_Plate.stl", "notes": "Back-of-hand plate. Print inner face down on tree supports (organic), 0.12 mm layers for the sunburst engraving."}, {"part": "Hex_Badge", "group": "Hand", "color": "black", "material": "PLA+ / PETG, matte black", "size_mm": "29.6 x 33.3 x 4.1", "volume_cm3": 1.6, "est_grams": 1.1, "file": "stl/black/10_Hex_Badge.stl", "notes": "Hextech badge inlay; press into the hand-plate pocket. Print face up."}, {"part": "Knuckle_Cap_Index", "group": "Hand", "color": "white", "material": "PLA+ / PETG, bone white", "size_mm": "11.0 x 12.6 x 5.0", "volume_cm3": 0.33, "est_grams": 0.2, "file": "stl/white/11_Knuckle_Cap_Index.stl", "notes": "Hex knuckle cap; glue into the guard. Print flat side down."}, {"part": "Knuckle_Cap_Middle", "group": "Hand", "color": "white", "material": "PLA+ / PETG, bone white", "size_mm": "10.5 x 12.3 x 4.4", "volume_cm3": 0.31, "est_grams": 0.2, "file": "stl/white/12_Knuckle_Cap_Middle.stl", "notes": "Hex knuckle cap; glue into the guard. Print flat side down."}, {"part": "Knuckle_Cap_Pinky", "group": "Hand", "color": "white", "material": "PLA+ / PETG, bone white", "size_mm": "10.9 x 12.5 x 4.7", "volume_cm3": 0.32, "est_grams": 0.2, "file": "stl/white/13_Knuckle_Cap_Pinky.stl", "notes": "Hex knuckle cap; glue into the guard. Print flat side down."}, {"part": "Knuckle_Cap_Ring", "group": "Hand", "color": "white", "material": "PLA+ / PETG, bone white", "size_mm": "10.5 x 12.4 x 4.4", "volume_cm3": 0.31, "est_grams": 0.2, "file": "stl/white/14_Knuckle_Cap_Ring.stl", "notes": "Hex knuckle cap; glue into the guard. Print flat side down."}, {"part": "Knuckle_Guard", "group": "Hand", "color": "black", "material": "PLA+ / PETG, matte black", "size_mm": "70.1 x 26.3 x 7.1", "volume_cm3": 3.42, "est_grams": 2.3, "file": "stl/black/15_Knuckle_Guard.stl", "notes": "Screws onto the hand plate (2x M2.5x8). Print inner face down with supports."}, {"part": "Spider_Emblem", "group": "Hand", "color": "white", "material": "PLA+ / PETG, bone white", "size_mm": "21.5 x 21.6 x 2.4", "volume_cm3": 0.25, "est_grams": 0.2, "file": "stl/white/16_Spider_Emblem.stl", "notes": "Spider inlay; glue into the badge. Print face down, 0.08 mm layers, 100% infill."}, {"part": "Finger_Index_Mid", "group": "Fingers", "color": "black", "material": "PETG (slight flex) or TPU 95A", "size_mm": "12.9 x 12.7 x 7.7", "volume_cm3": 0.28, "est_grams": 0.2, "file": "stl/black/17_Finger_Index_Mid.stl", "notes": "Finger scale; threads onto a 6 mm elastic loop."}, {"part": "Finger_Index_Prox", "group": "Fingers", "color": "red", "material": "PETG (slight flex) or TPU 95A", "size_mm": "16.3 x 23.8 x 7.9", "volume_cm3": 0.7, "est_grams": 0.5, "file": "stl/red/18_Finger_Index_Prox.stl", "notes": "Finger scale; threads onto a 6 mm elastic loop."}, {"part": "Finger_Middle_Mid", "group": "Fingers", "color": "black", "material": "PETG (slight flex) or TPU 95A", "size_mm": "12.7 x 15.5 x 9.9", "volume_cm3": 0.39, "est_grams": 0.3, "file": "stl/black/19_Finger_Middle_Mid.stl", "notes": "Finger scale; threads onto a 6 mm elastic loop."}, {"part": "Finger_Middle_Prox", "group": "Fingers", "color": "red", "material": "PETG (slight flex) or TPU 95A", "size_mm": "15.4 x 27.7 x 9.5", "volume_cm3": 0.89, "est_grams": 0.6, "file": "stl/red/20_Finger_Middle_Prox.stl", "notes": "Finger scale; threads onto a 6 mm elastic loop."}, {"part": "Finger_Pinky_Mid", "group": "Fingers", "color": "black", "material": "PETG (slight flex) or TPU 95A", "size_mm": "12.1 x 9.8 x 7.5", "volume_cm3": 0.17, "est_grams": 0.1, "file": "stl/black/21_Finger_Pinky_Mid.stl", "notes": "Finger scale; threads onto a 6 mm elastic loop."}, {"part": "Finger_Pinky_Prox", "group": "Fingers", "color": "red", "material": "PETG (slight flex) or TPU 95A", "size_mm": "15.8 x 18.1 x 8.2", "volume_cm3": 0.45, "est_grams": 0.3, "file": "stl/red/22_Finger_Pinky_Prox.stl", "notes": "Finger scale; threads onto a 6 mm elastic loop."}, {"part": "Finger_Ring_Mid", "group": "Fingers", "color": "black", "material": "PETG (slight flex) or TPU 95A", "size_mm": "12.8 x 14.8 x 10.2", "volume_cm3": 0.36, "est_grams": 0.2, "file": "stl/black/23_Finger_Ring_Mid.stl", "notes": "Finger scale; threads onto a 6 mm elastic loop."}, {"part": "Finger_Ring_Prox", "group": "Fingers", "color": "red", "material": "PETG (slight flex) or TPU 95A", "size_mm": "16.0 x 25.4 x 9.7", "volume_cm3": 0.77, "est_grams": 0.5, "file": "stl/red/24_Finger_Ring_Prox.stl", "notes": "Finger scale; threads onto a 6 mm elastic loop."}, {"part": "Thumb_Plate", "group": "Fingers", "color": "red", "material": "PETG (slight flex) or TPU 95A", "size_mm": "18.4 x 23.9 x 17.0", "volume_cm3": 0.65, "est_grams": 0.4, "file": "stl/red/25_Thumb_Plate.stl", "notes": "Thumb scale; elastic loop."}, {"part": "Palm_Plate", "group": "Palm", "color": "black", "material": "PLA+ / PETG, matte black", "size_mm": "65.4 x 62.5 x 9.7", "volume_cm3": 10.38, "est_grams": 7.1, "file": "stl/black/26_Palm_Plate.stl", "notes": "Vented palm plate with the trigger deck. Print palm-side down, supports from build plate only."}, {"part": "Side_Link", "group": "Palm", "color": "black", "material": "TPU 95A (recommended) or PETG", "size_mm": "26.0 x 20.0 x 48.4", "volume_cm3": 3.33, "est_grams": 2.3, "file": "stl/black/27_Side_Link.stl", "notes": "Wraps the pinky edge, joins hand plate to palm plate (4x M2.5x8)."}, {"part": "Thumb_Strap_Clip", "group": "Palm", "color": "black", "material": "TPU 95A (recommended) or PETG", "size_mm": "26.6 x 15.4 x 47.4", "volume_cm3": 2.57, "est_grams": 1.8, "file": "stl/black/28_Thumb_Strap_Clip.stl", "notes": "Passes through the thumb web, joins hand plate to palm plate."}, {"part": "Trigger_Bellcrank", "group": "Palm", "color": "black", "material": "PLA+ / PETG, matte black", "size_mm": "7.0 x 8.2 x 8.9", "volume_cm3": 0.13, "est_grams": 0.1, "file": "stl/black/29_Trigger_Bellcrank.stl", "notes": "Bellcrank; 2 mm pin. Print flat, 100% infill."}, {"part": "Trigger_Housing", "group": "Palm", "color": "white", "material": "PLA+ / PETG, bone white", "size_mm": "27.0 x 43.7 x 14.8", "volume_cm3": 6.01, "est_grams": 4.1, "file": "stl/white/30_Trigger_Housing.stl", "notes": "Trigger housing; 4x M2x12 into the palm deck. Print upright (open side down)."}, {"part": "Trigger_Pad", "group": "Palm", "color": "red", "material": "PLA+ / PETG, signal red", "size_mm": "27.7 x 31.5 x 15.0", "volume_cm3": 2.17, "est_grams": 1.5, "file": "stl/red/31_Trigger_Pad.stl", "notes": "Hex trigger plunger with web grip. Print face down; pins vertical."}, {"part": "Barrel", "group": "Shooter", "color": "black", "material": "PLA+ / PETG, matte black", "size_mm": "15.0 x 88.0 x 16.1", "volume_cm3": 6.96, "est_grams": 4.7, "file": "stl/black/32_Barrel.stl", "notes": "Barrel, 11 mm bore. Print vertical (muzzle up) for a round bore; ream with an 11 mm drill. Knob slot underneath, sear slot on the pinky side."}, {"part": "Barrel_Shroud", "group": "Shooter", "color": "red", "material": "PLA+ / PETG, signal red", "size_mm": "39.9 x 77.0 x 15.0", "volume_cm3": 16.4, "est_grams": 11.2, "file": "stl/red/33_Barrel_Shroud.stl", "notes": "Deco shroud + sear housing; 4x M2.5x16 up into the base. Print flat top down."}, {"part": "Cartridge_Vial", "group": "Shooter", "color": "clear", "material": "clear PETG or clear resin", "size_mm": "11.0 x 27.0 x 11.0", "volume_cm3": 2.55, "est_grams": 1.7, "file": "stl/clear/34_Cartridge_Vial.stl", "notes": "Web-fluid vial: clear PETG / resin, or an 11 mm glass test tube cut to 27 mm."}, {"part": "Cocking_Knob", "group": "Shooter", "color": "red", "material": "PLA+ / PETG, signal red", "size_mm": "11.4 x 12.7 x 11.5", "volume_cm3": 0.68, "est_grams": 0.5, "file": "stl/red/35_Cocking_Knob.stl", "notes": "Cocking knob; M3x16 screw through into the piston. Print hex face down."}, {"part": "Dart_Tip", "group": "Shooter", "color": "red", "material": "TPU 95A, red", "size_mm": "10.5 x 6.3 x 10.5", "volume_cm3": 0.35, "est_grams": 0.2, "file": "stl/red/36_Dart_Tip.stl", "notes": "Soft nose; push onto the dart spigot."}, {"part": "Gauge_Bezel", "group": "Shooter", "color": "white", "material": "PLA+ / PETG, bone white", "size_mm": "1.8 x 17.3 x 17.3", "volume_cm3": 0.16, "est_grams": 0.1, "file": "stl/white/37_Gauge_Bezel.stl", "notes": "Knurled bezel; press fit over the body lip."}, {"part": "Gauge_Body", "group": "Shooter", "color": "black", "material": "PLA+ / PETG, matte black", "size_mm": "10.6 x 16.0 x 16.0", "volume_cm3": 1.32, "est_grams": 0.9, "file": "stl/black/38_Gauge_Body.stl", "notes": "Gauge housing; M2.5 screw into the shroud side. Print face up."}, {"part": "Gauge_Face", "group": "Shooter", "color": "white", "material": "PLA+ / PETG, bone white", "size_mm": "1.1 x 13.2 x 13.2", "volume_cm3": 0.14, "est_grams": 0.1, "file": "stl/white/39_Gauge_Face.stl", "notes": "Dial; paint the tick grooves black. Print face down."}, {"part": "Gauge_Glass", "group": "Shooter", "color": "clear", "material": "clear resin", "size_mm": "1.9 x 13.1 x 13.1", "volume_cm3": 0.19, "est_grams": 0.1, "file": "stl/clear/40_Gauge_Glass.stl", "notes": "Dome lens: clear resin (or a 13 mm watch crystal)."}, {"part": "Gauge_Needle", "group": "Shooter", "color": "red", "material": "PLA+ / PETG, signal red", "size_mm": "0.6 x 7.3 x 2.6", "volume_cm3": 0.0, "est_grams": 0.0, "file": "stl/red/41_Gauge_Needle.stl", "notes": "Needle; glue onto a 1 mm pin in the face centre (or paint it on)."}, {"part": "Muzzle", "group": "Shooter", "color": "white", "material": "PLA+ / PETG, bone white", "size_mm": "20.8 x 15.7 x 20.8", "volume_cm3": 2.12, "est_grams": 1.4, "file": "stl/white/42_Muzzle.stl", "notes": "Spider-vent nozzle; slip fit over the barrel, glue or 1x M2 grub screw. Print muzzle up."}, {"part": "Piston", "group": "Shooter", "color": "white", "material": "PLA+ / PETG, bone white", "size_mm": "10.8 x 20.0 x 10.8", "volume_cm3": 1.43, "est_grams": 1.0, "file": "stl/white/43_Piston.stl", "notes": "Solid piston with sear groove + spring seat; sand to a sliding fit (10.8 mm). Print upright, 100% infill."}, {"part": "Rear_Cap", "group": "Shooter", "color": "white", "material": "PLA+ / PETG, bone white", "size_mm": "17.3 x 23.5 x 17.3", "volume_cm3": 3.0, "est_grams": 2.0, "file": "stl/white/44_Rear_Cap.stl", "notes": "Knurled rear cap + spring post; press/glue into the barrel. Print knob down."}, {"part": "Sear", "group": "Shooter", "color": "black", "material": "PLA+ / PETG, matte black", "size_mm": "18.4 x 13.8 x 3.0", "volume_cm3": 0.27, "est_grams": 0.2, "file": "stl/black/45_Sear.stl", "notes": "Sear (PETG/Nylon, 100% infill). 2 mm pivot pin. Tooth ramp faces the muzzle."}, {"part": "Shooter_Base", "group": "Shooter", "color": "black", "material": "PLA+ / PETG, matte black", "size_mm": "58.9 x 71.1 x 19.5", "volume_cm3": 23.12, "est_grams": 15.8, "file": "stl/black/46_Shooter_Base.stl", "notes": "Saddle that matches the bracer: 4x M3 heat-set inserts on top (bracer screws), 4x M2.5 inserts underneath (shroud screws). Print saddle-side up, tree supports in the cradle."}, {"part": "Vial_Cap_Front", "group": "Shooter", "color": "red", "material": "PLA+ / PETG, signal red", "size_mm": "13.6 x 8.6 x 13.6", "volume_cm3": 0.85, "est_grams": 0.6, "file": "stl/red/47_Vial_Cap_Front.stl", "notes": "Vial front cap with fill nipple. Print open end up."}, {"part": "Vial_Cap_Rear", "group": "Shooter", "color": "red", "material": "PLA+ / PETG, signal red", "size_mm": "13.6 x 7.0 x 13.6", "volume_cm3": 0.82, "est_grams": 0.6, "file": "stl/red/48_Vial_Cap_Rear.stl", "notes": "Vial end cap. Print open end up."}, {"part": "Web_Dart", "group": "Shooter", "color": "white", "material": "PLA+ / PETG, bone white", "size_mm": "10.5 x 24.8 x 10.5", "volume_cm3": 1.83, "est_grams": 1.2, "file": "stl/white/49_Web_Dart.stl", "notes": "Web dart (print 4+). Tie the web line through the tail eyelet. Print upright."}];
+window.BOM = [{"group": "Bracer", "item": "3 mm steel rod x 26 mm", "qty": 1}, {"group": "Bracer", "item": "3 mm steel rod x 35 mm (or M3x35 bolt + nylock)", "qty": 2}, {"group": "Bracer", "item": "6 mm EVA foam liner, glued in", "qty": 1}, {"group": "Bracer", "item": "Dome rivet / Chicago screw 5 mm head, 2.2 mm post", "qty": 24}, {"group": "Wrist", "item": "Chicago screw M3 / 6 mm", "qty": 4}, {"group": "Hand", "item": "Dome rivet 4 mm head", "qty": 6}, {"group": "Hand", "item": "M2.5 nut", "qty": 4}, {"group": "Hand", "item": "M2.5x12 button head", "qty": 4}, {"group": "Hand", "item": "M2.5x8 button head", "qty": 2}, {"group": "Fingers", "item": "6 mm black elastic loop", "qty": 9}, {"group": "Palm", "item": "2 mm steel pin x 27 mm", "qty": 1}, {"group": "Palm", "item": "4 mm Bowden housing (bike brake) ~150 mm + 1.2 mm inner wire", "qty": 1}, {"group": "Palm", "item": "Bowden ferrule 4 mm (bike brake end cap)", "qty": 1}, {"group": "Palm", "item": "Compression spring 4 OD x 6 mm, 0.4 wire", "qty": 2}, {"group": "Palm", "item": "M2x12 button head", "qty": 4}, {"group": "Shooter", "item": "2 mm steel pin x 10 mm", "qty": 1}, {"group": "Shooter", "item": "Bowden ferrule 4 mm", "qty": 1}, {"group": "Shooter", "item": "Compression spring 4 OD x 10 mm, 0.3 wire", "qty": 1}, {"group": "Shooter", "item": "Compression spring 8 OD x 0.8 wire x 60 free, ~10 N", "qty": 1}, {"group": "Shooter", "item": "M2.5x10 button head", "qty": 1}, {"group": "Shooter", "item": "M2.5x16 button head", "qty": 4}, {"group": "Shooter", "item": "M3x16 button head", "qty": 1}, {"group": "Shooter", "item": "M3x10 countersunk screw (bracer -> shooter base)", "qty": 4}, {"group": "Shooter", "item": "M3 heat-set insert, 4 mm hole", "qty": 4}, {"group": "Shooter", "item": "M2.5 heat-set insert, 3.3 mm hole", "qty": 4}, {"group": "Shooter", "item": "Braided nylon line 0.5 mm x 2 m (web tether)", "qty": 1}, {"group": "Hand", "item": "M2.5 nut (knuckle guard screws)", "qty": 2}, {"group": "All", "item": "CA glue + 5-minute epoxy", "qty": 1}];
+</script>
+<script type="module">
+import * as THREE from "three";
+import { OrbitControls } from "three/addons/controls/OrbitControls.js";
+import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
+import { RoomEnvironment } from "three/addons/environments/RoomEnvironment.js";
+
+const FPS = 24, F0 = 1, F1 = 132, F_CONTACT = 34, F_PRESS = 44, F_HOLD_END = 100, F_UNPRESS = 108;
+const PAD_TRAVEL = 3.0, RELEASE_DEG = 15;
+const PARTS = window.PARTS, BOM = window.BOM;
+const byName = Object.fromEntries(PARTS.map(p => [p.part, p]));
+const GROUPS = ["Bracer", "Wrist", "Hand", "Fingers", "Palm", "Shooter"];
+const $ = id => document.getElementById(id);
+
+// ---------------------------------------------------------------- static panel content
+const colors = { red: 0, black: 0, white: 0, clear: 0 };
+let grams = 0;
+PARTS.forEach(p => { colors[p.color] = (colors[p.color] || 0) + 1; grams += p.est_grams; });
+$("chips").innerHTML = [
+  `${PARTS.length} printed parts`, `${colors.red} red · ${colors.black} black · ${colors.white} white · ${colors.clear} clear`,
+  `≈ ${Math.round(grams)} g filament`, `all fit a 220 mm bed`
+].map(t => `<span class="chip">${t}</span>`).join("");
+$("parts").innerHTML = GROUPS.map(g => {
+  const items = PARTS.filter(p => p.group === g);
+  return `<div class="grp"><h4>${g} · ${items.length}</h4><ul>${items.map(p =>
+    `<li><button type="button" data-part="${p.part}"><i class="dot ${p.color}"></i><span>${p.part.replaceAll("_", " ")}</span></button></li>`).join("")}</ul></div>`;
+}).join("");
+$("bom").innerHTML = BOM.map(b => `<li><b>${b.qty}</b><span>${b.item}</span></li>`).join("");
+
+// ---------------------------------------------------------------- three.js scene
+const canvas = $("view");
+const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
+renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+renderer.outputColorSpace = THREE.SRGBColorSpace;
+renderer.toneMapping = THREE.ACESFilmicToneMapping;
+renderer.toneMappingExposure = 1.05;
+const scene = new THREE.Scene();
+const pmrem = new THREE.PMREMGenerator(renderer);
+scene.environment = pmrem.fromScene(new RoomEnvironment(), 0.04).texture;
+scene.environmentIntensity = 0.5;
+const B = (x, y, z) => new THREE.Vector3(x, z, -y);       // Blender (Z-up, mm) -> three (Y-up)
+const key = new THREE.DirectionalLight(0xffe6d0, 2.4); key.position.copy(B(-560, -260, 520)); scene.add(key);
+const teal = new THREE.DirectionalLight(0x4cc6ff, 1.6); teal.position.copy(B(420, 360, 240)); scene.add(teal);
+const mag = new THREE.DirectionalLight(0xff4070, 1.2); mag.position.copy(B(180, -520, -220)); scene.add(mag);
+scene.add(new THREE.HemisphereLight(0x8090a8, 0x140c10, 0.35));
+
+const camera = new THREE.PerspectiveCamera(32, 1, 2, 20000);
+camera.position.copy(B(-470, -360, 250));
+const controls = new OrbitControls(camera, canvas);
+controls.target.copy(B(0, -20, -25));
+controls.enableDamping = true;
+controls.minDistance = 120; controls.maxDistance = 2200;
+
+function resize() {
+  const r = canvas.parentElement.getBoundingClientRect();
+  renderer.setSize(r.width, r.height, false);
+  camera.aspect = r.width / Math.max(1, r.height);
+  camera.updateProjectionMatrix();
+}
+new ResizeObserver(resize).observe(canvas.parentElement);
+resize();
+
+// ---------------------------------------------------------------- model
+let mixer = null, action = null, frame = F0, playing = false, explodeAmt = 0;
+const meshes = [], partMeshes = new Map();
+let bowA = null, bowB = null, cable = null;
+const HIGHLIGHT = new THREE.Color(0xd0232d);
+
+function onModel(gltf) {
+  const root = gltf.scene;
+  scene.add(root);
+  root.traverse(o => {
+    if (o.name === "RIG_Bowden_Shooter") bowA = o;
+    if (o.name === "RIG_Bowden_Hand") bowB = o;
+    if (!o.isMesh) return;
+    const u = o.userData || {};
+    o.material = o.material.clone();
+    o.material.userData.base = { opacity: o.material.opacity, transparent: o.material.transparent };
+    const ex = u.ws_explode || [0, 0, 0];
+    o.userData.basePos = o.position.clone();
+    o.userData.exWorld = B(ex[0], ex[1], ex[2]);
+    meshes.push(o);
+    if (u.ws_kind === "print") partMeshes.set(o.name, o);
+  });
+  // the exporter writes one clip per animated joint; play them as one
+  const clip = gltf.animations.length ? new THREE.AnimationClip("thwip", -1, gltf.animations.flatMap(c => c.tracks)) : null;
+  if (clip) {
+    mixer = new THREE.AnimationMixer(root);
+    action = mixer.clipAction(clip);
+    action.setLoop(THREE.LoopOnce, 1);
+    action.clampWhenFinished = true;
+    action.play();
+    action.paused = true;
+  }
+  const cm = new THREE.MeshStandardMaterial({ color: 0x0b0b0d, roughness: 0.3, metalness: 0.1 });
+  cable = new THREE.Mesh(new THREE.BufferGeometry(), cm);
+  scene.add(cable);
+  setFrame(F0);
+  $("loading").hidden = true;
+}
+
+// The model ships as base64 text (artifact hosting serves text, not .glb); stream it with progress.
+async function loadModel() {
+  const failed = err => { $("loadmsg").textContent = "The model file did not load. Reload the page to try again."; console.error(err); };
+  try {
+    const res = await fetch("web_shooter.glb");
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    const total = Number(res.headers.get("Content-Length")) || 8133856;
+    const reader = res.body.getReader(), chunks = [];
+    let got = 0;
+    for (;;) {
+      const { done, value } = await reader.read();
+      if (done) break;
+      chunks.push(value); got += value.length;
+      $("loadbar").style.width = `${Math.min(100, 100 * got / total).toFixed(0)}%`;
+      $("loadmsg").textContent = `Loading model… ${(got / 1048576).toFixed(1)} / ${(total / 1048576).toFixed(1)} MB`;
+    }
+    const bytes = new Uint8Array(await new Blob(chunks).arrayBuffer());
+    new GLTFLoader().parse(bytes.buffer, "", onModel, failed);
+  } catch (err) { failed(err); }
+}
+loadModel();
+
+// ---------------------------------------------------------------- mechanism maths (same as the Blender rig)
+const ease = t => { t = Math.min(1, Math.max(0, t)); return t * t * (3 - 2 * t); };
+function padTravel(f) {
+  if (f <= F_CONTACT) return 0;
+  if (f <= F_PRESS) return PAD_TRAVEL * ease((f - F_CONTACT) / (F_PRESS - F_CONTACT));
+  if (f <= F_HOLD_END) return PAD_TRAVEL;
+  if (f <= F_UNPRESS) return PAD_TRAVEL * (1 - ease((f - F_HOLD_END) / (F_UNPRESS - F_HOLD_END)));
+  return 0;
+}
+function linkage(t) {
+  let lo = -1.2, hi = 0, phi = 0;
+  for (let i = 0; i < 50; i++) {
+    phi = 0.5 * (lo + hi);
+    if (-4.5 * Math.sin(phi) + (3.4 - t) * Math.cos(phi) > 3.4) lo = phi; else hi = phi;
+  }
+  const w = 5 * Math.sin(-phi);
+  return { phi: -phi * 180 / Math.PI, w, sear: Math.asin(Math.min(1, w / 9)) * 180 / Math.PI };
+}
+let releaseFrame = F_PRESS;
+for (let f = F_CONTACT; f <= F_PRESS; f += 0.05) { if (linkage(padTravel(f)).sear >= RELEASE_DEG) { releaseFrame = f; break; } }
+
+function readout(f) {
+  const t = padTravel(f), L = linkage(t);
+  const set = (id, v, max, txt) => { $("m-" + id).style.width = `${Math.min(100, 100 * v / max)}%`; $("v-" + id).textContent = txt; };
+  set("pad", t, PAD_TRAVEL, `${t.toFixed(2)} mm`);
+  set("bell", L.phi, 45, `${L.phi.toFixed(1)}°`);
+  set("wire", L.w, 3.5, `${L.w.toFixed(2)} mm`);
+  set("sear", L.sear, 23, `${L.sear.toFixed(1)}°`);
+  const fired = f >= releaseFrame;
+  $("s-cocked").className = "pill" + (fired ? "" : " on");
+  $("s-cocked").textContent = fired ? "Fired (re-cock knob)" : "Cocked";
+  $("s-release").className = "pill" + (fired ? " hot" : "");
+  $("s-flight").className = "pill" + (f > releaseFrame + 2 ? " on" : "");
+}
+
+// ---------------------------------------------------------------- per-frame state
+const m3 = new THREE.Matrix3(), tmp = new THREE.Vector3();
+function applyExplode() {
+  const handOn = $("t-hand").getAttribute("aria-pressed") === "true";
+  for (const o of meshes) {
+    if (o.userData.ws_kind === "display") o.visible = handOn && explodeAmt < 0.05;
+    if (o.name === "Bracer_Padding") o.visible = explodeAmt < 0.05;
+    o.position.copy(o.userData.basePos);
+    if (explodeAmt > 0 && o.parent) {
+      o.parent.updateWorldMatrix(true, false);
+      m3.setFromMatrix4(o.parent.matrixWorld).invert();
+      tmp.copy(o.userData.exWorld).multiplyScalar(explodeAmt).applyMatrix3(m3);
+      o.position.add(tmp);
+    }
+  }
+}
+function updateCable() {
+  if (!cable || !bowA || !bowB) return;
+  cable.visible = explodeAmt < 0.02 && $("t-hw").getAttribute("aria-pressed") === "true";
+  if (!cable.visible) return;
+  const a = bowA.getWorldPosition(new THREE.Vector3()), b = bowB.getWorldPosition(new THREE.Vector3());
+  const bDir = bowB.localToWorld(new THREE.Vector3(0, 0, 1)).sub(b).normalize();
+  const curve = new THREE.CubicBezierCurve3(a, a.clone().add(B(-2, 34, 4)), b.clone().add(bDir.multiplyScalar(34)), b);
+  cable.geometry.dispose();
+  cable.geometry = new THREE.TubeGeometry(curve, 48, 2, 10, false);
+}
+function setFrame(f) {
+  frame = Math.min(F1, Math.max(F0, f));
+  if (action) { action.time = (frame - F0) / FPS; mixer.update(0); }
+  applyExplode();
+  scene.updateMatrixWorld(true);
+  updateCable();
+  $("scrub").value = frame.toFixed(1);
+  $("frame").textContent = `f ${Math.round(frame)} / ${F1}`;
+  readout(frame);
+}
+
+// ---------------------------------------------------------------- controls
+$("thwip").addEventListener("click", () => {
+  if (frame >= F1 - 0.5) setFrame(F0);
+  playing = true;
+});
+$("scrub").addEventListener("input", e => { playing = false; setFrame(parseFloat(e.target.value)); });
+$("explode").addEventListener("input", e => { explodeAmt = parseFloat(e.target.value); setFrame(frame); });
+function toggle(id, pred) {
+  const b = $(id);
+  b.addEventListener("click", () => {
+    const on = b.getAttribute("aria-pressed") !== "true";
+    b.setAttribute("aria-pressed", on);
+    meshes.forEach(o => { if (pred(o.userData)) o.visible = on; });
+    updateCable();
+  });
+}
+toggle("t-hand", u => u.ws_kind === "display");
+toggle("t-hw", u => u.ws_kind === "hardware");
+toggle("t-fx", u => u.ws_kind === "fx" && u.ws_color === "web");
+
+let colorFilter = "all";
+document.querySelectorAll(".cf").forEach(b => b.addEventListener("click", () => {
+  colorFilter = b.dataset.c;
+  document.querySelectorAll(".cf").forEach(x => x.setAttribute("aria-pressed", x === b));
+  for (const o of meshes) {
+    const u = o.userData, base = o.material.userData.base;
+    const dim = colorFilter !== "all" && !(u.ws_kind === "print" && (u.ws_color === colorFilter || (colorFilter === "red" && u.ws_color === "tpu")));
+    o.material.transparent = dim ? true : base.transparent;
+    o.material.opacity = dim ? 0.08 : base.opacity;
+    o.material.depthWrite = !dim;
+    o.material.needsUpdate = true;
+  }
+}));
+
+// ---------------------------------------------------------------- selection
+let selected = null;
+function select(name) {
+  if (selected) selected.material.emissive.setHex(0x000000);
+  selected = partMeshes.get(name) || null;
+  document.querySelectorAll(".grp button").forEach(b => b.setAttribute("aria-current", b.dataset.part === name));
+  const p = byName[name];
+  if (!selected || !p) return;
+  selected.material.emissive.copy(HIGHLIGHT);
+  selected.material.emissiveIntensity = 0.55;
+  $("sel").innerHTML = `<h2>Selected part</h2><h3>${p.part.replaceAll("_", " ")}</h3>
+    <dl class="kv">
+      <dt>Assembly</dt><dd>${p.group}</dd>
+      <dt>Print in</dt><dd><i class="dot ${p.color}"></i> ${p.material}</dd>
+      <dt>Size</dt><dd class="mono">${p.size_mm} mm</dd>
+      <dt>Filament</dt><dd class="mono">≈ ${p.est_grams} g · ${p.volume_cm3} cm³</dd>
+      <dt>STL</dt><dd class="mono">exports/${p.file}</dd>
+    </dl>
+    <p class="note">${p.notes}</p>`;
+}
+document.querySelectorAll(".grp button").forEach(b => b.addEventListener("click", () => {
+  select(b.dataset.part);
+  const o = partMeshes.get(b.dataset.part);
+  if (o) { const c = new THREE.Box3().setFromObject(o).getCenter(new THREE.Vector3()); controls.target.lerp(c, 0.6); }
+}));
+const ray = new THREE.Raycaster(), ndc = new THREE.Vector2();
+let down = null;
+canvas.addEventListener("pointerdown", e => { down = [e.clientX, e.clientY]; });
+canvas.addEventListener("pointerup", e => {
+  if (!down || Math.hypot(e.clientX - down[0], e.clientY - down[1]) > 5) return;
+  const r = canvas.getBoundingClientRect();
+  ndc.set(((e.clientX - r.left) / r.width) * 2 - 1, -((e.clientY - r.top) / r.height) * 2 + 1);
+  ray.setFromCamera(ndc, camera);
+  const hit = ray.intersectObjects(meshes.filter(o => o.visible && o.material.opacity > 0.5), false)
+    .find(h => h.object.userData.ws_kind === "print");
+  if (hit) select(hit.object.name);
+});
+
+// ---------------------------------------------------------------- loop
+const clock = new THREE.Clock();
+renderer.setAnimationLoop(() => {
+  const dt = clock.getDelta();
+  if (playing) {
+    setFrame(frame + dt * FPS);
+    if (frame >= F1) playing = false;
+  }
+  controls.update();
+  renderer.render(scene, camera);
+});
+</script>

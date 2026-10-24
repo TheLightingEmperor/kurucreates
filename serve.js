@@ -17,6 +17,8 @@ const TYPES = {
   '.ico': 'image/x-icon',
   '.mp4': 'video/mp4',
   '.webm': 'video/webm',
+  '.json': 'application/json',
+  '.glb': 'model/gltf-binary',
 };
 
 const server = http.createServer((req, res) => {
