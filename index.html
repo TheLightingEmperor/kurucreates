@@ -243,13 +243,33 @@
   .faq details p { padding-bottom: 22px; color: var(--white-70); max-width: 720px; }
 
   /* ── cta ── */
-  .cta { border: 1px solid var(--border); border-radius: 8px; padding: clamp(32px, 6vw, 72px); background: radial-gradient(ellipse at 85% 0%, var(--lime-10), transparent 55%), var(--black-2); display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(0, .8fr); gap: 40px; align-items: end; }
-  .cta h2 { font-size: clamp(48px, 7vw, 96px); }
-  .cta-side { display: flex; flex-direction: column; gap: 14px; }
-  .cta-side .btn { justify-content: space-between; }
+  .cta { border: 1px solid var(--border); border-radius: 8px; padding: clamp(32px, 6vw, 72px); background: radial-gradient(ellipse at 85% 0%, var(--lime-10), transparent 55%), var(--black-2); display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: clamp(32px, 5vw, 64px); align-items: start; }
+  .cta h2 { font-size: clamp(46px, 6vw, 84px); }
+  .cta-left { display: flex; flex-direction: column; gap: 18px; }
+  .cta-left .muted { font-size: 16px; max-width: 460px; }
+  .cta-alt { display: flex; flex-direction: column; align-items: flex-start; gap: 14px; margin-top: 10px; }
+  .demo-form { display: flex; flex-direction: column; gap: 14px; min-width: 0; }
+  .demo-form .row2 { display: grid; grid-template-columns: minmax(0,1fr) minmax(0,1fr); gap: 14px; }
+  .field { display: flex; flex-direction: column; gap: 7px; min-width: 0; }
+  .field span { font-family: var(--mono); font-size: 10.5px; letter-spacing: .12em; text-transform: uppercase; color: var(--white-70); }
+  .field em { font-style: normal; color: var(--white-50); text-transform: none; letter-spacing: 0; }
+  .field input, .field select, .field textarea { width: 100%; font: inherit; font-size: 16px; color: var(--white); background: var(--black); border: 1px solid var(--white-20); border-radius: 3px; padding: 12px 14px; transition: border-color .2s; }
+  .field textarea { resize: vertical; min-height: 84px; }
+  .field select { appearance: none; -webkit-appearance: none; background-image: linear-gradient(45deg, transparent 50%, var(--lime) 50%), linear-gradient(135deg, var(--lime) 50%, transparent 50%); background-position: calc(100% - 18px) 52%, calc(100% - 13px) 52%; background-size: 5px 5px; background-repeat: no-repeat; padding-right: 36px; }
+  .field input::placeholder, .field textarea::placeholder { color: var(--white-50); }
+  .field input:focus, .field select:focus, .field textarea:focus { outline: none; border-color: var(--lime); }
+  .demo-form .btn { justify-content: space-between; cursor: pointer; font-family: var(--mono); }
+  .demo-form .btn[disabled] { opacity: .6; cursor: wait; }
+  .hp { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
+  .form-status { font-size: 14px; color: var(--white-70); min-height: 1.4em; }
+  .form-status.ok { color: var(--lime); }
+  .form-status.err { color: #ff6b8b; }
+  @media (max-width: 520px) { .demo-form .row2 { grid-template-columns: 1fr; } }
   .email-line { font-family: var(--mono); font-size: 13px; color: var(--white-70); display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
   .email-line a { color: var(--white); text-decoration-color: var(--lime); text-underline-offset: 4px; word-break: break-all; }
-  @media (max-width: 860px) { .cta { grid-template-columns: 1fr; } }
+  @media (max-width: 860px) { .cta { grid-template-columns: minmax(0, 1fr); } }
+  .cta-alt .btn { white-space: normal; max-width: 100%; }
+  .cta > * { min-width: 0; }
 
   /* ── footer ── */
   footer { position: relative; z-index: 1; border-top: 1px solid var(--border); margin-top: clamp(72px, 10vw, 128px); padding-block: 28px max(28px, env(safe-area-inset-bottom, 0px)); }
@@ -540,15 +560,36 @@
 <section class="block" id="contact" style="padding-top:0">
   <div class="wrap">
     <div class="cta rv">
-      <div>
+      <div class="cta-left">
         <span class="eyebrow">Start here</span>
-        <h2 style="margin-top:16px">Show me your business. I'll show you a working demo.</h2>
+        <h2>Show me your business. I'll show you a working demo.</h2>
+        <p class="muted">Free, built on your real information, in your inbox within 48 hours. No call needed.</p>
+        <div class="cta-alt">
+          <a class="btn btn-ghost" href="https://calendly.com/karan-kathori" target="_blank" rel="noopener">Book a 30-min call instead <svg viewBox="0 0 15 15" fill="none"><path d="M3 7.5H12M12 7.5L8.5 4M12 7.5L8.5 11" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+          <div class="email-line"><span class="muted">Or write to</span><a href="mailto:karan.kathori@gmail.com">karan.kathori@gmail.com</a></div>
+        </div>
       </div>
-      <div class="cta-side">
-        <a class="btn btn-lime" href="mailto:karan.kathori@gmail.com?subject=Free%20demo%20request&amp;body=My%20website%3A%20%0AWhat%20I%27d%20like%20to%20automate%3A%20">Email me your website <svg viewBox="0 0 15 15" fill="none"><path d="M3 7.5H12M12 7.5L8.5 4M12 7.5L8.5 11" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
-        <a class="btn btn-ghost" href="https://calendly.com/karan-kathori" target="_blank" rel="noopener">Book a 30-min call <svg viewBox="0 0 15 15" fill="none"><path d="M3 7.5H12M12 7.5L8.5 4M12 7.5L8.5 11" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
-        <div class="email-line"><span class="muted">Or write to</span><a href="mailto:karan.kathori@gmail.com">karan.kathori@gmail.com</a></div>
-      </div>
+      <form class="demo-form" id="demoForm" name="free-demo" method="POST" action="/thanks/" data-netlify="true" netlify-honeypot="company_url">
+        <input type="hidden" name="form-name" value="free-demo" />
+        <p class="hp" aria-hidden="true"><label>Leave this empty <input name="company_url" tabindex="-1" autocomplete="off" /></label></p>
+        <div class="row2">
+          <label class="field" for="f-name"><span>Your name</span><input id="f-name" name="name" type="text" autocomplete="name" required /></label>
+          <label class="field" for="f-email"><span>Work email</span><input id="f-email" name="email" type="email" autocomplete="email" required /></label>
+        </div>
+        <label class="field" for="f-site"><span>Your website</span><input id="f-site" name="website" type="text" inputmode="url" placeholder="yourbusiness.com" required /></label>
+        <label class="field" for="f-type"><span>What should the demo do?</span>
+          <select id="f-type" name="demo_type">
+            <option>Answer calls and book appointments</option>
+            <option>Follow up on new leads</option>
+            <option>Something for my agency's clients</option>
+            <option>AI video or ad creative</option>
+            <option>Something else</option>
+          </select>
+        </label>
+        <label class="field" for="f-msg"><span>Anything I should know? <em>Optional</em></span><textarea id="f-msg" name="message" rows="3" placeholder="What eats your week, the tools you use, a deadline..."></textarea></label>
+        <button class="btn btn-lime" type="submit" id="f-submit">Send me a demo <svg viewBox="0 0 15 15" fill="none"><path d="M3 7.5H12M12 7.5L8.5 4M12 7.5L8.5 11" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+        <p class="form-status" id="f-status" role="status" aria-live="polite"></p>
+      </form>
     </div>
   </div>
 </section>
@@ -589,6 +630,28 @@
       entries.forEach(function (e) { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } });
     }, { rootMargin: '0px 0px -8% 0px' });
     document.querySelectorAll('.rv').forEach(function (el) { io.observe(el); });
+  }
+
+  // free-demo form: post to Netlify in the background and confirm on the page
+  var form = document.getElementById('demoForm');
+  if (form && window.fetch) {
+    form.addEventListener('submit', function (e) {
+      e.preventDefault();
+      var status = document.getElementById('f-status'), submit = document.getElementById('f-submit');
+      submit.disabled = true; status.className = 'form-status'; status.textContent = 'Sending...';
+      fetch('/', { method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, body: new URLSearchParams(new FormData(form)).toString() })
+        .then(function (r) {
+          if (!r.ok) throw new Error(r.status);
+          form.reset();
+          status.className = 'form-status ok';
+          status.textContent = "Got it. I'll send your demo within 48 hours, usually sooner.";
+        })
+        .catch(function () {
+          status.className = 'form-status err';
+          status.textContent = "That didn't send. Please email karan.kathori@gmail.com with your website instead.";
+        })
+        .then(function () { submit.disabled = false; });
+    });
   }
 
   // replay the example call: first line stays, the rest arrive one by one
