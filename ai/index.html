@@ -513,6 +513,7 @@
     *, *::before, *::after { animation-duration: .001ms !important; animation-iteration-count: 1 !important; transition-duration: .001ms !important; }
     .marquee-track { animation: none; }
   }
+  @media (max-width: 520px) { .hdr-prod { display: none; } }
 </style>
 </head>
 <body>
@@ -524,7 +525,7 @@
     </a>
     <a href="/" class="logo">KARAN<span> KOTHARI</span></a>
   </div>
-  <a href="https://calendly.com/karan-kathori" target="_blank" rel="noopener" class="hdr-cta"><span class="dot"></span>Get In Touch</a>
+  <div style="display:flex;align-items:center;gap:22px"><a href="/production/" class="hdr-cta hdr-prod">Production</a><a href="https://calendly.com/karan-kathori" target="_blank" rel="noopener" class="hdr-cta"><span class="dot"></span>Get In Touch</a></div>
 </header>
 
 <!-- ═══════════ HERO ═══════════ -->
