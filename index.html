@@ -3,13 +3,13 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-<title>Karan Kothari — Production &amp; AI Systems</title>
-<meta name="description" content="Portfolio of Karan Kothari: cinematic and AI video production, and AI agents, platforms, games and 3D built with Claude and Codex." />
+<title>Karan Kothari — Production, Design &amp; AI Agents</title>
+<meta name="description" content="Portfolio of Karan Kothari: cinematic and AI video production; 3D, games and interface design; and AI agents and automations." />
 <link rel="canonical" href="https://karankothari.com/" />
 <meta property="og:type" content="website" />
 <meta property="og:url" content="https://karankothari.com/" />
-<meta property="og:title" content="Karan Kothari — Production & AI Systems" />
-<meta property="og:description" content="Two practices, kept separate: films for brands and creators, and AI systems that run every day." />
+<meta property="og:title" content="Karan Kothari — Production, Design & AI Agents" />
+<meta property="og:description" content="Three practices, kept separate: films for brands and creators, 3D and interface design, and AI agents that run every day." />
 <meta name="twitter:card" content="summary" />
 <meta name="theme-color" content="#080808" />
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' fill='%23080808'/%3E%3Ctext x='50%25' y='54%25' text-anchor='middle' dominant-baseline='middle' font-family='Impact,Arial Narrow,sans-serif' font-size='44' fill='%23C8FF47'%3EK%3C/text%3E%3C/svg%3E" />
@@ -17,12 +17,12 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Archivo:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
 <script type="application/ld+json">
-{"@context":"https://schema.org","@type":"Person","name":"Karan Kothari","url":"https://karankothari.com/","email":"hmu@karankothari.com","jobTitle":"Producer and AI systems builder","sameAs":["https://www.linkedin.com/in/karan-kothari-06423a183/","https://www.instagram.com/kuru_creates/","https://x.com/KaranKo66645113"]}
+{"@context":"https://schema.org","@type":"Person","name":"Karan Kothari","url":"https://karankothari.com/","email":"hmu@karankothari.com","jobTitle":"Producer, designer and AI systems builder","sameAs":["https://www.linkedin.com/in/karan-kothari-06423a183/","https://www.instagram.com/kuru_creates/","https://x.com/KaranKo66645113"]}
 </script>
 <style>
   *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
-  /* Portfolio as two rooms: a warm film side (red) and a cool systems side (lime), split down the middle. */
+  /* Portfolio as three rooms side by side: film (red), design (blue), agents (lime). Each keeps its own colour. */
   :root {
     --black:    #080808;
     --black-2:  #0f0f0f;
@@ -35,6 +35,8 @@
     --lime-15:  rgba(200,255,71,.15);
     --film:     #FF3B4E;
     --film-15:  rgba(255,59,78,.15);
+    --design:   #6EA8FF;
+    --design-15: rgba(110,168,255,.15);
     --disp: 'Bebas Neue', Impact, 'Arial Narrow', sans-serif;
     --body: 'Archivo', system-ui, -apple-system, 'Segoe UI', sans-serif;
     --mono: 'JetBrains Mono', ui-monospace, Menlo, monospace;
@@ -65,13 +67,15 @@
   .top nav a { font-family: var(--mono); font-size: 11px; letter-spacing: .14em; text-transform: uppercase; color: var(--white-70); text-decoration: none; transition: color .2s; white-space: nowrap; }
   .top nav a.p:hover { color: var(--film); }
   .top nav a.s:hover { color: var(--lime); }
+  .top nav a.d:hover { color: var(--design); }
   .top nav a.c:hover { color: var(--white); }
-  @media (max-width: 640px) { .top nav a.c { display: none; } .top nav { gap: 16px; } }
+  @media (max-width: 700px) { .top nav a.c { display: none; } .top nav { gap: 14px; } }
   @media (max-width: 400px) { .logo { font-size: 17px; letter-spacing: .1em; } .top nav a { font-size: 10px; letter-spacing: .08em; } }
 
   /* ── intro ── */
   .intro { position: relative; z-index: 1; display: grid; grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr); gap: 32px; align-items: end; padding-block: clamp(40px, 7vw, 88px) clamp(28px, 4vw, 44px); }
-  .intro h1 { font-family: var(--disp); font-weight: 400; font-size: clamp(72px, 13vw, 184px); line-height: .84; letter-spacing: .005em; }
+  .intro h1 { font-family: var(--disp); font-weight: 400; font-size: clamp(64px, 10vw, 148px); line-height: .84; letter-spacing: .005em; }
+  .intro h1 .c { color: var(--design); }
   .intro h1 .a { color: var(--film); }
   .intro h1 .b { color: var(--lime); }
   .intro h1 .amp { color: transparent; -webkit-text-stroke: 1.5px var(--white-50); }
@@ -83,12 +87,13 @@
   .split { position: relative; z-index: 1; display: flex; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
   .room { position: relative; flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 28px; padding-block: clamp(32px, 4vw, 52px); text-decoration: none; overflow: hidden; transition: flex .6s var(--ease); }
   .split:hover .room { flex: .9; }
-  .split:hover .room:hover { flex: 1.2; }
+  .split:hover .room:hover { flex: 1.3; }
   .room + .room { border-left: 1px solid var(--border); }
   .room-bg { position: absolute; inset: 0; z-index: 0; pointer-events: none; opacity: .7; transition: opacity .5s; }
   .room:hover .room-bg { opacity: 1; }
   .room > *:not(.room-bg) { position: relative; z-index: 1; }
   .prod .room-bg { background: radial-gradient(ellipse at 15% 0%, var(--film-15), transparent 60%); }
+  .des .room-bg { background: radial-gradient(ellipse at 50% 0%, var(--design-15), transparent 60%), repeating-linear-gradient(135deg, rgba(240,237,230,.03) 0 1px, transparent 1px 22px); }
   .sys .room-bg { background:
       radial-gradient(ellipse at 85% 0%, var(--lime-15), transparent 60%),
       repeating-linear-gradient(0deg, rgba(240,237,230,.035) 0 1px, transparent 1px 28px),
@@ -97,9 +102,10 @@
   .room-head { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; }
   .prod .idx { color: var(--film); }
   .sys .idx { color: var(--lime); }
+  .des .idx { color: var(--design); }
   .room-head .count { color: var(--white-50); }
-  .room h2 { font-family: var(--disp); font-weight: 400; font-size: clamp(56px, 7.5vw, 112px); line-height: .86; letter-spacing: .01em; }
-  .room .tag { color: var(--white-70); font-size: 16px; max-width: 460px; }
+  .room h2 { font-family: var(--disp); font-weight: 400; font-size: clamp(52px, 5.4vw, 88px); line-height: .86; letter-spacing: .01em; }
+  .room .tag { color: var(--white-70); font-size: 15.5px; max-width: 460px; }
   .disc { display: flex; flex-wrap: wrap; gap: 6px; }
   .disc span { font-family: var(--mono); font-size: 10.5px; color: var(--white-70); border: 1px solid var(--border); padding: 4px 9px; border-radius: 999px; }
 
@@ -121,8 +127,11 @@
   .log .dot { width: 7px; height: 7px; border-radius: 50%; background: var(--lime); box-shadow: 0 0 8px rgba(200,255,71,.6); }
   .log .dot.idle { background: var(--white-20); box-shadow: none; }
   .log .st { font-family: var(--mono); font-size: 10.5px; color: var(--white-50); letter-spacing: .06em; white-space: nowrap; }
-  .shots { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: 8px; }
+  .shots { display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: 8px; }
   .shots .frame { aspect-ratio: 4/3; border: 1px solid var(--border); }
+  .shots .frame.wide { grid-column: 1 / -1; aspect-ratio: 16/8; background: #e9e9e7; }
+  .des:hover .enter { background: var(--design); border-color: var(--design); color: var(--black); }
+  .des .disc span { border-color: rgba(110,168,255,.22); }
 
   .enter { margin-top: auto; display: inline-flex; align-items: center; gap: 10px; align-self: flex-start; font-family: var(--mono); font-size: 12px; letter-spacing: .14em; text-transform: uppercase; padding: 14px 20px; border: 1px solid var(--white-20); transition: background .25s, color .25s, border-color .25s; }
   .enter svg { width: 14px; height: 14px; transition: transform .25s var(--ease); }
@@ -131,7 +140,7 @@
   .sys:hover .enter { background: var(--lime); border-color: var(--lime); color: var(--black); }
   .room:focus-visible { outline: 2px solid var(--white); outline-offset: -4px; }
 
-  @media (max-width: 900px) {
+  @media (max-width: 1024px) {
     .split { flex-direction: column; }
     .split:hover .room, .split:hover .room:hover { flex: none; }
     .room + .room { border-left: 0; border-top: 1px solid var(--border); }
@@ -160,7 +169,8 @@
   .topic label span { display: inline-block; font-family: var(--mono); font-size: 11.5px; padding: 9px 14px; border: 1px solid var(--white-20); border-radius: 999px; cursor: pointer; transition: all .2s; }
   .topic input:focus-visible + span { outline: 2px solid var(--white); outline-offset: 2px; }
   .topic input[value="Production"]:checked + span { background: var(--film); border-color: var(--film); color: var(--white); }
-  .topic input[value="AI systems"]:checked + span { background: var(--lime); border-color: var(--lime); color: var(--black); }
+  .topic input[value="AI agents"]:checked + span { background: var(--lime); border-color: var(--lime); color: var(--black); }
+  .topic input[value="Design"]:checked + span { background: var(--design); border-color: var(--design); color: var(--black); }
   .topic input[value="Something else"]:checked + span { background: var(--white); border-color: var(--white); color: var(--black); }
   .send { align-self: flex-start; display: inline-flex; align-items: center; gap: 10px; font-family: var(--mono); font-size: 12px; letter-spacing: .14em; text-transform: uppercase; padding: 14px 22px; background: var(--white); color: var(--black); border: 0; border-radius: 0; cursor: pointer; transition: background .2s; }
   .send:hover { background: var(--lime); }
@@ -189,14 +199,15 @@
   <a href="/" class="logo">KARAN<span> KOTHARI</span></a>
   <nav aria-label="Main">
     <a href="/production/" class="p">Production</a>
-    <a href="/ai/" class="s">AI Systems</a>
+    <a href="/design/" class="d">Design</a>
+    <a href="/ai/" class="s">AI Agents</a>
     <a href="#contact" class="c">Contact</a>
   </nav>
 </header>
 
 <section class="intro pad">
-  <h1><span class="a">Films</span> <span class="amp">&amp;</span><br/><span class="b">systems.</span></h1>
-  <p>I'm Karan Kothari. <b>I make films</b> for brands and creators, and <b>I build AI systems</b> that run every day. They're two separate practices, so they get two separate rooms. Pick one.</p>
+  <h1><span class="a">Films,</span><br/><span class="c">forms</span> <span class="amp">&amp;</span><br/><span class="b">agents.</span></h1>
+  <p>I'm Karan Kothari. <b>I make films</b> for brands and creators, <b>I design</b> in 3D and on screen, and <b>I build AI agents</b> that run every day. Three separate practices, three separate rooms. Pick one.</p>
 </section>
 
 <main class="split">
@@ -217,24 +228,36 @@
     <span class="enter">Enter Production <svg viewBox="0 0 15 15" fill="none"><path d="M3 7.5H12M12 7.5L8.5 4M12 7.5L8.5 11" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
   </a>
 
-  <a href="/ai/" class="room sys pad" aria-label="Enter AI Systems">
+  <a href="/design/" class="room des pad" aria-label="Enter Design">
     <div class="room-bg"></div>
-    <div class="room-head"><span class="mono idx">02 / AI Systems</span><span class="mono count">23 builds</span></div>
-    <h2>AI Systems</h2>
-    <p class="tag">Agents, platforms, games and 3D, built with AI harnesses like Claude and Codex. Most of them are live and you can click around.</p>
+    <div class="room-head"><span class="mono idx">02 / Design</span><span class="mono count">7 pieces</span></div>
+    <h2>Design</h2>
+    <p class="tag">3D machines, game worlds and interfaces, generated in code. Spin the models, play the game, open the apps.</p>
+    <div class="shots" aria-hidden="true">
+      <div class="frame wide"><img src="/design/media/sc-hero.jpg" alt="" loading="lazy" style="object-position:center 62%" /></div>
+      <div class="frame"><img src="/design/media/db-01-connaught-place.jpg" alt="" loading="lazy" /></div>
+      <div class="frame"><img src="/design/media/ws-01_hero.jpg" alt="" loading="lazy" /></div>
+    </div>
+    <div class="disc"><span>3D modelling</span><span>Procedural</span><span>Games</span><span>UI</span><span>3D printing</span><span>Three.js</span></div>
+    <span class="enter">Enter Design <svg viewBox="0 0 15 15" fill="none"><path d="M3 7.5H12M12 7.5L8.5 4M12 7.5L8.5 11" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+  </a>
+
+  <a href="/ai/" class="room sys pad" aria-label="Enter AI Agents">
+    <div class="room-bg"></div>
+    <div class="room-head"><span class="mono idx">03 / AI Agents</span><span class="mono count">14 builds</span></div>
+    <h2>AI Agents</h2>
+    <p class="tag">Agents, platforms and automations, built with AI harnesses like Claude and Codex. Most are live and you can click around.</p>
     <ul class="log">
       <li><span class="dot"></span><span>Multi-agent voice assistant</span><span class="st">in production</span></li>
       <li><span class="dot"></span><span>Creative intelligence platform</span><span class="st">live · client</span></li>
       <li><span class="dot"></span><span>Sales call coach</span><span class="st">runs daily</span></li>
       <li><span class="dot"></span><span>Browser tasks agent</span><span class="st">self-hosted</span></li>
+      <li><span class="dot"></span><span>Relationship momentum</span><span class="st">runs daily</span></li>
       <li><span class="dot idle"></span><span>Agentic video edit</span><span class="st">shipped reels</span></li>
+      <li><span class="dot idle"></span><span>Viral claim checker</span><span class="st">internal</span></li>
     </ul>
-    <div class="shots" aria-hidden="true">
-      <div class="frame"><img src="/ai/media/db-01-connaught-place.jpg" alt="" loading="lazy" /></div>
-      <div class="frame"><img src="/ai/media/ws-01_hero.jpg" alt="" loading="lazy" /></div>
-      <div class="frame"><img src="/ai/media/fl-hero.jpg" alt="" loading="lazy" /></div>
-    </div>
-    <span class="enter">Enter AI Systems <svg viewBox="0 0 15 15" fill="none"><path d="M3 7.5H12M12 7.5L8.5 4M12 7.5L8.5 11" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+    <div class="disc"><span>Voice AI</span><span>Multi-agent</span><span>Research agents</span><span>Daily routines</span><span>Dashboards</span><span>MCP</span></div>
+    <span class="enter">Enter AI Agents <svg viewBox="0 0 15 15" fill="none"><path d="M3 7.5H12M12 7.5L8.5 4M12 7.5L8.5 11" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
   </a>
 
 </main>
@@ -243,7 +266,7 @@
   <div>
     <span class="mono" style="color:var(--white-50)">Contact</span>
     <h2>Say hello.</h2>
-    <p class="lead">A film, a system, or something that needs both. Tell me what you have in mind.</p>
+    <p class="lead">A film, a design, an agent, or something that needs all three. Tell me what you have in mind.</p>
     <div class="links">
       <a href="mailto:hmu@karankothari.com">hmu@karankothari.com <span>Email</span></a>
       <a href="https://calendly.com/karan-kathori" target="_blank" rel="noopener">Book a call <span>Calendly</span></a>
@@ -259,7 +282,8 @@
     <fieldset class="topic">
       <legend>This is about</legend>
       <label><input type="radio" name="topic" value="Production" checked /><span>Production</span></label>
-      <label><input type="radio" name="topic" value="AI systems" /><span>AI systems</span></label>
+      <label><input type="radio" name="topic" value="Design" /><span>Design</span></label>
+      <label><input type="radio" name="topic" value="AI agents" /><span>AI agents</span></label>
       <label><input type="radio" name="topic" value="Something else" /><span>Something else</span></label>
     </fieldset>
     <div class="row2">
@@ -275,7 +299,7 @@
 <footer class="pad">
   <span>© 2026 Karan Kothari</span>
   <nav aria-label="Footer">
-    <a href="/production/">Production</a><a href="/ai/">AI Systems</a><a href="/writings/">Writing</a>
+    <a href="/production/">Production</a><a href="/design/">Design</a><a href="/ai/">AI Agents</a><a href="/writings/">Writing</a>
   </nav>
 </footer>
 

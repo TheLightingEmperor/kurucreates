@@ -1,6 +1,22 @@
 [build]
   publish = "."
 
+# games, 3D viewers and their media moved from /ai/ to /design/ on 2026-10-29
+[[redirects]]
+  from = "/ai/play/*"
+  to = "/design/play/:splat"
+  status = 301
+
+[[redirects]]
+  from = "/ai/viewer/*"
+  to = "/design/viewer/:splat"
+  status = 301
+
+[[redirects]]
+  from = "/ai/media/*"
+  to = "/design/media/:splat"
+  status = 301
+
 [[headers]]
   for = "/*"
   [headers.values]
