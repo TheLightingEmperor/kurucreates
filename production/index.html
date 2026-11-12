@@ -464,9 +464,6 @@
       color: rgba(255,255,255,.55); text-transform: uppercase;
     }
 
-    /* self-hosted video modal */
-    .vmodal-frame video { position: absolute; inset: 0; width: 100%; height: 100%; background: #000; }
-
     /* ── SERVICES ─────────────────────────────────── */
     #services { background: var(--black-2); }
     .svc-layout { display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: start; margin-top: 60px; }
@@ -973,12 +970,12 @@
       <div class="yt-carousel">
         <div class="yt-viewport">
           <div class="yt-track" id="ytTrack">
-            <a class="yt-slide" href="media/sj-sizzle-endcard.mp4" onclick="event.preventDefault();openLocalModal('media/sj-sizzle-endcard.mp4','wide')">
-              <img src="media/sj-sizzle-endcard.jpg" alt="The Shannon Joy Show sizzle reel" loading="lazy" />
+            <a class="yt-slide" href="https://vimeo.com/1246371621" target="_blank" rel="noopener" data-vimeo-slide="1246371621">
+              <img id="vimeoSlideThumb1246371621" src="" alt="The Shannon Joy Show sizzle reel" loading="lazy" />
               <div class="yt-slide-ov"><div class="yt-pb"><svg viewBox="0 0 24 24"><polygon points="5,3 19,12 5,21"/></svg></div><div class="yt-slide-label">The Shannon Joy Show · Sizzle</div></div>
             </a>
-            <a class="yt-slide" href="media/sj-intro.mp4" onclick="event.preventDefault();openLocalModal('media/sj-intro.mp4','wide')">
-              <img src="media/sj-intro.jpg" alt="The Shannon Joy Show intro" loading="lazy" />
+            <a class="yt-slide" href="https://vimeo.com/1246371015" target="_blank" rel="noopener" data-vimeo-slide="1246371015">
+              <img id="vimeoSlideThumb1246371015" src="" alt="The Shannon Joy Show intro" loading="lazy" />
               <div class="yt-slide-ov"><div class="yt-pb"><svg viewBox="0 0 24 24"><polygon points="5,3 19,12 5,21"/></svg></div><div class="yt-slide-label">The Shannon Joy Show · Intro</div></div>
             </a>
             <a class="yt-slide" href="https://vimeo.com/1194046316" target="_blank" rel="noopener" data-vimeo-slide="1194046316">
@@ -1041,8 +1038,8 @@
       <div class="work-cat-block">
         <div class="work-cat-label">Video Edits</div>
         <div class="work-cat-cards">
-          <div class="vcard" onclick="openLocalModal('media/viral-video-agent.mp4','tall')">
-            <div class="vcard-bg" style="background-image:url('media/viral-video-agent.jpg')"></div>
+          <div class="vcard" data-vimeo="1246370852" onclick="openModal('1246370852')">
+            <div class="vcard-bg loading" id="vbg-1246370852"></div>
             <div class="vcard-mask"></div>
             <div class="vcard-shine"></div><div class="vcard-c tl"></div><div class="vcard-c tr"></div>
             <div class="vcard-play"><svg viewBox="0 0 24 24"><polygon points="6,3 20,12 6,21"/></svg></div>
@@ -1407,17 +1404,6 @@
     <button class="vmodal-close" onclick="closeModal()">&times;</button>
     <div class="vmodal-frame">
       <iframe id="vmodal-iframe" src="" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen></iframe>
-    </div>
-    <div class="vmodal-esc">ESC to close</div>
-  </div>
-</div>
-
-<!-- Self-hosted Video Modal -->
-<div class="vmodal" id="lvmodal" onclick="closeLocalModal(event)">
-  <div class="vmodal-box" id="lvmodal-box">
-    <button class="vmodal-close" onclick="closeLocalModal()">&times;</button>
-    <div class="vmodal-frame" id="lvmodal-frame">
-      <video id="lvmodal-video" controls playsinline preload="none"></video>
     </div>
     <div class="vmodal-esc">ESC to close</div>
   </div>
@@ -2089,37 +2075,6 @@ document.addEventListener('keydown', e => {
     document.body.style.overflow = '';
     lenis.start();
   }
-});
-
-// ═══════════════════════════════════════════════════
-//  SELF-HOSTED VIDEO MODAL
-// ═══════════════════════════════════════════════════
-const lvmodal = document.getElementById('lvmodal');
-const lvBox = document.getElementById('lvmodal-box');
-const lvFrame = document.getElementById('lvmodal-frame');
-const lvVideo = document.getElementById('lvmodal-video');
-
-function openLocalModal(src, shape) {
-  const wide = shape === 'wide';
-  lvBox.classList.toggle('wide', wide);
-  lvFrame.classList.toggle('wide', wide);
-  lvVideo.src = src;
-  lvmodal.classList.add('open');
-  document.body.style.overflow = 'hidden';
-  lenis.stop();
-  lvVideo.play().catch(() => {});
-}
-function closeLocalModal(e) {
-  if (e && e.target !== lvmodal) return;
-  lvVideo.pause();
-  lvVideo.removeAttribute('src');
-  lvVideo.load();
-  lvmodal.classList.remove('open');
-  document.body.style.overflow = '';
-  lenis.start();
-}
-document.addEventListener('keydown', e => {
-  if (e.key === 'Escape' && lvmodal.classList.contains('open')) closeLocalModal();
 });
 
 // ═══════════════════════════════════════════════════
