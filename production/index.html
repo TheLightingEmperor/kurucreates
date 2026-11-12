@@ -464,6 +464,9 @@
       color: rgba(255,255,255,.55); text-transform: uppercase;
     }
 
+    /* self-hosted video modal */
+    .vmodal-frame video { position: absolute; inset: 0; width: 100%; height: 100%; background: #000; }
+
     /* ── SERVICES ─────────────────────────────────── */
     #services { background: var(--black-2); }
     .svc-layout { display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: start; margin-top: 60px; }
@@ -746,8 +749,8 @@
     <a href="#home" class="nav-logo">KARAN<span> KOTHARI</span></a>
   </div>
   <ul class="nav-links">
-    <li><a href="#work" data-nav="work">Work</a></li>
     <li><a href="#services" data-nav="services">Services</a></li>
+    <li><a href="#work" data-nav="work">Work</a></li>
     <li><a href="#testimonials" data-nav="testimonials">Testimonials</a></li>
     <li><a href="#faq" data-nav="faq">FAQ</a></li>
     <li><a href="/design/">Design</a></li>
@@ -917,6 +920,110 @@
   </div>
 </div>
 
+<!-- ═══ SERVICES ════════════════════════════════════ -->
+<section id="services">
+  <div class="sec-label rev"><div class="sec-label-line"></div><span class="sec-label-text">What I Do</span></div>
+  <h2 class="sec-h2 rev d1">THE<br><span>CRAFT</span></h2>
+
+  <div class="svc-layout">
+    <ul class="svc-list">
+      <li class="svc-item rev">
+        <span class="svc-num">01</span>
+        <div class="svc-info">
+          <h3>Short-Form Video</h3>
+          <p>Scroll-stopping content built for Reels, TikTok &amp; Shorts. Hook-first structure, punchy edits, platform-native delivery.</p>
+        </div>
+        <span class="svc-arrow">→</span>
+      </li>
+      <li class="svc-item rev d1">
+        <span class="svc-num">02</span>
+        <div class="svc-info">
+          <h3>AI-Powered Video</h3>
+          <p>Cutting-edge generative video production. Cinematic output at a fraction of traditional production cost — zero compromise on quality.</p>
+        </div>
+        <span class="svc-arrow">→</span>
+      </li>
+      <li class="svc-item rev d2">
+        <span class="svc-num">03</span>
+        <div class="svc-info">
+          <h3>AI Avatar Creation</h3>
+          <p>Deploy your digital twin — a lifelike avatar that speaks your brand and scales content production without you on camera.</p>
+        </div>
+        <span class="svc-arrow">→</span>
+      </li>
+      <li class="svc-item rev d3">
+        <span class="svc-num">04</span>
+        <div class="svc-info">
+          <h3>Post-Production &amp; Editing</h3>
+          <p>Full post workflow: color grading, sound design, motion graphics, subtitles, and final delivery across every platform.</p>
+        </div>
+        <span class="svc-arrow">→</span>
+      </li>
+      <li class="svc-item rev d4">
+        <span class="svc-num">05</span>
+        <div class="svc-info">
+          <h3>Content Strategy</h3>
+          <p>Scripts, hooks, publishing cadence. I build you a content machine that grows your audience and converts viewers to clients.</p>
+        </div>
+        <span class="svc-arrow">→</span>
+      </li>
+    </ul>
+
+    <div class="svc-visual rev d2">
+      <div class="yt-carousel">
+        <div class="yt-viewport">
+          <div class="yt-track" id="ytTrack">
+            <a class="yt-slide" href="media/sj-sizzle-endcard.mp4" onclick="event.preventDefault();openLocalModal('media/sj-sizzle-endcard.mp4','wide')">
+              <img src="media/sj-sizzle-endcard.jpg" alt="The Shannon Joy Show sizzle reel" loading="lazy" />
+              <div class="yt-slide-ov"><div class="yt-pb"><svg viewBox="0 0 24 24"><polygon points="5,3 19,12 5,21"/></svg></div><div class="yt-slide-label">The Shannon Joy Show · Sizzle</div></div>
+            </a>
+            <a class="yt-slide" href="media/sj-intro.mp4" onclick="event.preventDefault();openLocalModal('media/sj-intro.mp4','wide')">
+              <img src="media/sj-intro.jpg" alt="The Shannon Joy Show intro" loading="lazy" />
+              <div class="yt-slide-ov"><div class="yt-pb"><svg viewBox="0 0 24 24"><polygon points="5,3 19,12 5,21"/></svg></div><div class="yt-slide-label">The Shannon Joy Show · Intro</div></div>
+            </a>
+            <a class="yt-slide" href="https://vimeo.com/1194046316" target="_blank" rel="noopener" data-vimeo-slide="1194046316">
+              <img id="vimeoSlideThumb1194046316" src="" alt="Vimeo Reel" loading="lazy" />
+              <div class="yt-slide-ov"><div class="yt-pb"><svg viewBox="0 0 24 24"><polygon points="5,3 19,12 5,21"/></svg></div><div class="yt-slide-label">Watch on Vimeo</div></div>
+            </a>
+            <a class="yt-slide" href="https://youtu.be/806o6JuYfV8" target="_blank" rel="noopener">
+              <img src="https://img.youtube.com/vi/806o6JuYfV8/maxresdefault.jpg" alt="Work Reel 1" loading="lazy" />
+              <div class="yt-slide-ov"><div class="yt-pb"><svg viewBox="0 0 24 24"><polygon points="5,3 19,12 5,21"/></svg></div><div class="yt-slide-label">Watch on YouTube</div></div>
+            </a>
+            <a class="yt-slide" href="https://youtu.be/viV2QIcQuF4" target="_blank" rel="noopener">
+              <img src="https://img.youtube.com/vi/viV2QIcQuF4/maxresdefault.jpg" alt="Work Reel 2" loading="lazy" />
+              <div class="yt-slide-ov"><div class="yt-pb"><svg viewBox="0 0 24 24"><polygon points="5,3 19,12 5,21"/></svg></div><div class="yt-slide-label">Watch on YouTube</div></div>
+            </a>
+            <a class="yt-slide" href="https://www.youtube.com/watch?v=XUAMr7OczBQ" target="_blank" rel="noopener">
+              <img src="https://img.youtube.com/vi/XUAMr7OczBQ/maxresdefault.jpg" alt="Work Reel 3" loading="lazy" />
+              <div class="yt-slide-ov"><div class="yt-pb"><svg viewBox="0 0 24 24"><polygon points="5,3 19,12 5,21"/></svg></div><div class="yt-slide-label">Watch on YouTube</div></div>
+            </a>
+            <a class="yt-slide" href="https://youtu.be/ZtbaXo2iGcw" target="_blank" rel="noopener">
+              <img src="https://img.youtube.com/vi/ZtbaXo2iGcw/maxresdefault.jpg" alt="Work Reel 4" loading="lazy" />
+              <div class="yt-slide-ov"><div class="yt-pb"><svg viewBox="0 0 24 24"><polygon points="5,3 19,12 5,21"/></svg></div><div class="yt-slide-label">Watch on YouTube</div></div>
+            </a>
+          </div>
+        </div>
+        <div class="yt-controls">
+          <span class="yt-label" id="ytLabel">01 / 07</span>
+          <div class="yt-dots" id="ytDots">
+            <button class="yt-dot active" onclick="ytGo(0)"></button>
+            <button class="yt-dot" onclick="ytGo(1)"></button>
+            <button class="yt-dot" onclick="ytGo(2)"></button>
+            <button class="yt-dot" onclick="ytGo(3)"></button>
+            <button class="yt-dot" onclick="ytGo(4)"></button>
+            <button class="yt-dot" onclick="ytGo(5)"></button>
+            <button class="yt-dot" onclick="ytGo(6)"></button>
+          </div>
+          <div class="yt-arrows">
+            <button class="yt-arr" onclick="ytPrev()">&#8592;</button>
+            <button class="yt-arr" onclick="ytNext()">&#8594;</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
 <!-- ═══ WORK — HORIZONTAL SCROLL ═══════════════════ -->
 <section id="work">
   <div class="work-header">
@@ -929,6 +1036,41 @@
 
   <div class="work-h-outer" id="workOuter">
     <div class="work-h-track" id="workTrack">
+
+      <!-- Video Edits -->
+      <div class="work-cat-block">
+        <div class="work-cat-label">Video Edits</div>
+        <div class="work-cat-cards">
+          <div class="vcard" onclick="openLocalModal('media/viral-video-agent.mp4','tall')">
+            <div class="vcard-bg" style="background-image:url('media/viral-video-agent.jpg')"></div>
+            <div class="vcard-mask"></div>
+            <div class="vcard-shine"></div><div class="vcard-c tl"></div><div class="vcard-c tr"></div>
+            <div class="vcard-play"><svg viewBox="0 0 24 24"><polygon points="6,3 20,12 6,21"/></svg></div>
+            <div class="vcard-num">01</div>
+          </div>
+          <div class="vcard" data-vimeo="1083246080" onclick="openModal('1083246080')">
+            <div class="vcard-bg loading" id="vbg-1083246080"></div>
+            <div class="vcard-mask"></div>
+            <div class="vcard-shine"></div><div class="vcard-c tl"></div><div class="vcard-c tr"></div>
+            <div class="vcard-play"><svg viewBox="0 0 24 24"><polygon points="6,3 20,12 6,21"/></svg></div>
+            <div class="vcard-num">02</div>
+          </div>
+          <div class="vcard" data-vimeo="1173877281" onclick="openModal('1173877281')">
+            <div class="vcard-bg loading" id="vbg-1173877281"></div>
+            <div class="vcard-mask"></div>
+            <div class="vcard-shine"></div><div class="vcard-c tl"></div><div class="vcard-c tr"></div>
+            <div class="vcard-play"><svg viewBox="0 0 24 24"><polygon points="6,3 20,12 6,21"/></svg></div>
+            <div class="vcard-num">03</div>
+          </div>
+          <div class="vcard" data-vimeo="1083244971" onclick="openModal('1083244971')">
+            <div class="vcard-bg loading" id="vbg-1083244971"></div>
+            <div class="vcard-mask"></div>
+            <div class="vcard-shine"></div><div class="vcard-c tl"></div><div class="vcard-c tr"></div>
+            <div class="vcard-play"><svg viewBox="0 0 24 24"><polygon points="6,3 20,12 6,21"/></svg></div>
+            <div class="vcard-num">04</div>
+          </div>
+        </div>
+      </div>
 
       <!-- AI UGC Ads -->
       <div class="work-cat-block">
@@ -992,34 +1134,6 @@
           </div>
           <div class="vcard" data-vimeo="1195335406" onclick="openModal('1195335406')">
             <div class="vcard-bg loading" id="vbg-1195335406"></div>
-            <div class="vcard-mask"></div>
-            <div class="vcard-shine"></div><div class="vcard-c tl"></div><div class="vcard-c tr"></div>
-            <div class="vcard-play"><svg viewBox="0 0 24 24"><polygon points="6,3 20,12 6,21"/></svg></div>
-            <div class="vcard-num">03</div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Video Edits -->
-      <div class="work-cat-block">
-        <div class="work-cat-label">Video Edits</div>
-        <div class="work-cat-cards">
-          <div class="vcard" data-vimeo="1083246080" onclick="openModal('1083246080')">
-            <div class="vcard-bg loading" id="vbg-1083246080"></div>
-            <div class="vcard-mask"></div>
-            <div class="vcard-shine"></div><div class="vcard-c tl"></div><div class="vcard-c tr"></div>
-            <div class="vcard-play"><svg viewBox="0 0 24 24"><polygon points="6,3 20,12 6,21"/></svg></div>
-            <div class="vcard-num">01</div>
-          </div>
-          <div class="vcard" data-vimeo="1173877281" onclick="openModal('1173877281')">
-            <div class="vcard-bg loading" id="vbg-1173877281"></div>
-            <div class="vcard-mask"></div>
-            <div class="vcard-shine"></div><div class="vcard-c tl"></div><div class="vcard-c tr"></div>
-            <div class="vcard-play"><svg viewBox="0 0 24 24"><polygon points="6,3 20,12 6,21"/></svg></div>
-            <div class="vcard-num">02</div>
-          </div>
-          <div class="vcard" data-vimeo="1083244971" onclick="openModal('1083244971')">
-            <div class="vcard-bg loading" id="vbg-1083244971"></div>
             <div class="vcard-mask"></div>
             <div class="vcard-shine"></div><div class="vcard-c tl"></div><div class="vcard-c tr"></div>
             <div class="vcard-play"><svg viewBox="0 0 24 24"><polygon points="6,3 20,12 6,21"/></svg></div>
@@ -1104,100 +1218,6 @@
       <div class="vcard-c tl"></div><div class="vcard-c tr"></div>
       <div class="vcard-c bl"></div><div class="vcard-c br"></div>
       <div class="brandad-label">Brand Campaign</div>
-    </div>
-  </div>
-</section>
-
-<!-- ═══ SERVICES ════════════════════════════════════ -->
-<section id="services">
-  <div class="sec-label rev"><div class="sec-label-line"></div><span class="sec-label-text">What I Do</span></div>
-  <h2 class="sec-h2 rev d1">THE<br><span>CRAFT</span></h2>
-
-  <div class="svc-layout">
-    <ul class="svc-list">
-      <li class="svc-item rev">
-        <span class="svc-num">01</span>
-        <div class="svc-info">
-          <h3>Short-Form Video</h3>
-          <p>Scroll-stopping content built for Reels, TikTok &amp; Shorts. Hook-first structure, punchy edits, platform-native delivery.</p>
-        </div>
-        <span class="svc-arrow">→</span>
-      </li>
-      <li class="svc-item rev d1">
-        <span class="svc-num">02</span>
-        <div class="svc-info">
-          <h3>AI-Powered Video</h3>
-          <p>Cutting-edge generative video production. Cinematic output at a fraction of traditional production cost — zero compromise on quality.</p>
-        </div>
-        <span class="svc-arrow">→</span>
-      </li>
-      <li class="svc-item rev d2">
-        <span class="svc-num">03</span>
-        <div class="svc-info">
-          <h3>AI Avatar Creation</h3>
-          <p>Deploy your digital twin — a lifelike avatar that speaks your brand and scales content production without you on camera.</p>
-        </div>
-        <span class="svc-arrow">→</span>
-      </li>
-      <li class="svc-item rev d3">
-        <span class="svc-num">04</span>
-        <div class="svc-info">
-          <h3>Post-Production &amp; Editing</h3>
-          <p>Full post workflow: color grading, sound design, motion graphics, subtitles, and final delivery across every platform.</p>
-        </div>
-        <span class="svc-arrow">→</span>
-      </li>
-      <li class="svc-item rev d4">
-        <span class="svc-num">05</span>
-        <div class="svc-info">
-          <h3>Content Strategy</h3>
-          <p>Scripts, hooks, publishing cadence. I build you a content machine that grows your audience and converts viewers to clients.</p>
-        </div>
-        <span class="svc-arrow">→</span>
-      </li>
-    </ul>
-
-    <div class="svc-visual rev d2">
-      <div class="yt-carousel">
-        <div class="yt-viewport">
-          <div class="yt-track" id="ytTrack">
-            <a class="yt-slide" href="https://vimeo.com/1194046316" target="_blank" rel="noopener" data-vimeo-slide="1194046316">
-              <img id="vimeoSlideThumb1194046316" src="" alt="Vimeo Reel" loading="lazy" />
-              <div class="yt-slide-ov"><div class="yt-pb"><svg viewBox="0 0 24 24"><polygon points="5,3 19,12 5,21"/></svg></div><div class="yt-slide-label">Watch on Vimeo</div></div>
-            </a>
-            <a class="yt-slide" href="https://youtu.be/806o6JuYfV8" target="_blank" rel="noopener">
-              <img src="https://img.youtube.com/vi/806o6JuYfV8/maxresdefault.jpg" alt="Work Reel 1" loading="lazy" />
-              <div class="yt-slide-ov"><div class="yt-pb"><svg viewBox="0 0 24 24"><polygon points="5,3 19,12 5,21"/></svg></div><div class="yt-slide-label">Watch on YouTube</div></div>
-            </a>
-            <a class="yt-slide" href="https://youtu.be/viV2QIcQuF4" target="_blank" rel="noopener">
-              <img src="https://img.youtube.com/vi/viV2QIcQuF4/maxresdefault.jpg" alt="Work Reel 2" loading="lazy" />
-              <div class="yt-slide-ov"><div class="yt-pb"><svg viewBox="0 0 24 24"><polygon points="5,3 19,12 5,21"/></svg></div><div class="yt-slide-label">Watch on YouTube</div></div>
-            </a>
-            <a class="yt-slide" href="https://www.youtube.com/watch?v=XUAMr7OczBQ" target="_blank" rel="noopener">
-              <img src="https://img.youtube.com/vi/XUAMr7OczBQ/maxresdefault.jpg" alt="Work Reel 3" loading="lazy" />
-              <div class="yt-slide-ov"><div class="yt-pb"><svg viewBox="0 0 24 24"><polygon points="5,3 19,12 5,21"/></svg></div><div class="yt-slide-label">Watch on YouTube</div></div>
-            </a>
-            <a class="yt-slide" href="https://youtu.be/ZtbaXo2iGcw" target="_blank" rel="noopener">
-              <img src="https://img.youtube.com/vi/ZtbaXo2iGcw/maxresdefault.jpg" alt="Work Reel 4" loading="lazy" />
-              <div class="yt-slide-ov"><div class="yt-pb"><svg viewBox="0 0 24 24"><polygon points="5,3 19,12 5,21"/></svg></div><div class="yt-slide-label">Watch on YouTube</div></div>
-            </a>
-          </div>
-        </div>
-        <div class="yt-controls">
-          <span class="yt-label" id="ytLabel">01 / 04</span>
-          <div class="yt-dots" id="ytDots">
-            <button class="yt-dot active" onclick="ytGo(0)"></button>
-            <button class="yt-dot" onclick="ytGo(1)"></button>
-            <button class="yt-dot" onclick="ytGo(2)"></button>
-            <button class="yt-dot" onclick="ytGo(3)"></button>
-            <button class="yt-dot" onclick="ytGo(4)"></button>
-          </div>
-          <div class="yt-arrows">
-            <button class="yt-arr" onclick="ytPrev()">&#8592;</button>
-            <button class="yt-arr" onclick="ytNext()">&#8594;</button>
-          </div>
-        </div>
-      </div>
     </div>
   </div>
 </section>
@@ -1387,6 +1407,17 @@
     <button class="vmodal-close" onclick="closeModal()">&times;</button>
     <div class="vmodal-frame">
       <iframe id="vmodal-iframe" src="" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen></iframe>
+    </div>
+    <div class="vmodal-esc">ESC to close</div>
+  </div>
+</div>
+
+<!-- Self-hosted Video Modal -->
+<div class="vmodal" id="lvmodal" onclick="closeLocalModal(event)">
+  <div class="vmodal-box" id="lvmodal-box">
+    <button class="vmodal-close" onclick="closeLocalModal()">&times;</button>
+    <div class="vmodal-frame" id="lvmodal-frame">
+      <video id="lvmodal-video" controls playsinline preload="none"></video>
     </div>
     <div class="vmodal-esc">ESC to close</div>
   </div>
@@ -1992,7 +2023,7 @@ function toggleFaq(q) {
 //  YOUTUBE CAROUSEL
 // ═══════════════════════════════════════════════════
 let ytCurrent = 0;
-const ytTotal = 5;
+const ytTotal = document.querySelectorAll('#ytTrack .yt-slide').length;
 function ytGo(index) {
   ytCurrent = (index + ytTotal) % ytTotal;
   document.getElementById('ytTrack').style.transform = `translateX(-${ytCurrent * 100}%)`;
@@ -2058,6 +2089,37 @@ document.addEventListener('keydown', e => {
     document.body.style.overflow = '';
     lenis.start();
   }
+});
+
+// ═══════════════════════════════════════════════════
+//  SELF-HOSTED VIDEO MODAL
+// ═══════════════════════════════════════════════════
+const lvmodal = document.getElementById('lvmodal');
+const lvBox = document.getElementById('lvmodal-box');
+const lvFrame = document.getElementById('lvmodal-frame');
+const lvVideo = document.getElementById('lvmodal-video');
+
+function openLocalModal(src, shape) {
+  const wide = shape === 'wide';
+  lvBox.classList.toggle('wide', wide);
+  lvFrame.classList.toggle('wide', wide);
+  lvVideo.src = src;
+  lvmodal.classList.add('open');
+  document.body.style.overflow = 'hidden';
+  lenis.stop();
+  lvVideo.play().catch(() => {});
+}
+function closeLocalModal(e) {
+  if (e && e.target !== lvmodal) return;
+  lvVideo.pause();
+  lvVideo.removeAttribute('src');
+  lvVideo.load();
+  lvmodal.classList.remove('open');
+  document.body.style.overflow = '';
+  lenis.start();
+}
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape' && lvmodal.classList.contains('open')) closeLocalModal();
 });
 
 // ═══════════════════════════════════════════════════
